@@ -1,0 +1,94 @@
+                        ======================== 
+                        =   Game Architecture  =
+                        ======================== 
+
+LINK: https://imagecampus-edu-ar.zoom.us/j/94149980998?pwd=rebWDEltzis1qkzQTPvZ1i3Cchp0hw.1
+ID: 941 4998 0998
+CONTRASEÑA: 936651
+
+github: https://github.com/ImageCampus-Leandro-Rodriguez/ARQVJ2026
+
+Version de Unity 6000.3.3f1
+
+Dos soluciones diferentes o dos proyectos diferentes
+
+Framework: introduce limitaciones
+ToolBox: usar solo lo que nuestro proyecto necesita
+
+MVC (model vista controlador) para juegos (comparar esto con el libro Game Coding Complete)
+ACV (Arquitectura comanda la vista)
+--------------------------------------------------------------------------------------
+
+=====================================================================================
+
+Arquitectura ( Model ):
+    - Logica base del juego (aplicacion que abro en consola y me tira logs)
+
+    Player
+        + Pos
+        + Rot
+        + Scl
+
+    Update(float DeltaTime)
+    LateUpdate(float DeltaTime)
+
+=====================================================================================
+
+Vista:
+    - Render
+    - Input
+    - Sonido
+    - Asset Managers
+
+    GameplayPlayer
+        + Sprite
+        + Color
+
+    DeltaTime
+    Main(void)
+        - Start -> new Arquitectura()
+        - Update -> Update(DeltaTime)
+        - LateUpdate -> LateUpdate(DeltaTime)
+
+
+=====================================================================================
+
+--------------------------------------------------------------------------------------
+
+Vista captura los inputs que se van a realizar, crea un snapshot, y se lo pasa a la arquitectura
+
+Arquitectura:
+    Gameplay
+        - Constructor -> player = new Player
+        - Update -> player.Update
+
+    Player
+    Enemy
+    Map
+    
+
+View:
+    GameplayView
+        - Start -> arq = new Gameplay
+        - Update -> arq.Update
+
+    InputReader
+        - List<Input>
+
+
+Singleton RANT
+Un ejemplo de buen uso es el de un Service Provider (evita tener informacion repetida)
+
+Service Provider
+va a se un Singleton y va a tener una lista de servicios
+
+List<Service> services;
+
+Service
+    - Persistance : bool
+
+Task Scheoduler
+
+- Multithreading:
+
+- Time Counter:
