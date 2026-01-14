@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "View": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\Dev\\ADSPV\\View"
+    }
+  }
+}
