@@ -10,7 +10,7 @@ namespace Rexar.Toolbox.Pool
         private readonly ConcurrentDictionary<Type, ConcurrentStack<IResetteable>> concurrentPool = 
             new ConcurrentDictionary<Type, ConcurrentStack<IResetteable>>();
 
-        public ResetteableType Get<ResetteableType>(params object[] parameters) where ResetteableType : IResetteable
+        public ResetteableType? Get<ResetteableType>(params object[] parameters) where ResetteableType : IResetteable
         {
             Type resettableType = typeof(ResetteableType);
             if(!concurrentPool.ContainsKey(resettableType))
@@ -18,18 +18,18 @@ namespace Rexar.Toolbox.Pool
                 concurrentPool.TryAdd(resettableType, new ConcurrentStack<IResetteable>());
             }
 
-            ResetteableType val;
+            ResetteableType? val;
             if(concurrentPool[resettableType].Count > 0)
             {
-                concurrentPool[resettableType].TryPop(out IResetteable resettable);
-                val = (ResetteableType)resettable;
+                concurrentPool[resettableType].TryPop(out IResetteable? resettable);
+                val = (ResetteableType?)resettable;
             }
             else
             {
-                val = (ResetteableType)Activator.CreateInstance(resettableType);
+                val = (ResetteableType?)Activator.CreateInstance(resettableType);
             }
 
-            val.Assign(parameters);
+            val?.Assign(parameters);
             return val;
         }
 

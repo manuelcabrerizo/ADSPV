@@ -1,6 +1,7 @@
 ﻿using Rexar.Toolbox.Events;
 using Rexar.Toolbox.Services;
 using Rexar.Architecture;
+using Rexar.View.Rendering;
 
 using System;
 using OpenTK.Graphics.OpenGL4;
@@ -9,13 +10,26 @@ using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTK.Mathematics;
 
+
 namespace Rexar.View
 {
+    public struct PerPass
+    {
+        public Matrix4 View;
+        public Matrix4 Proj;
+    }
+
+    public struct PerDraw
+    {
+        public Matrix4 World;
+        public Vector4 Color;
+    }
+
     public class GameplayView : GameWindow
     {
-        private EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
+        private EventBus? EventBus => ServiceProvider.Instance.GetService<EventBus>();
         
-        private Gameplay? mGameplay = null;
+        private Gameplay? gameplay = null;
 
         // TODO: move all this to a Rendering system
         private Shader? mShader = null;
@@ -35,9 +49,6 @@ namespace Rexar.View
             0, 1, 3,   // first triangle
             1, 2, 3    // second triangle
         };
-        Matrix4 model;
-        Matrix4 view;
-        Matrix4 proj;
 
         public GameplayView(int width, int height, string title) 
             : base(GameWindowSettings.Default, new NativeWindowSettings() { Size = (width, height), Title = title }) 
@@ -48,14 +59,14 @@ namespace Rexar.View
         {
             base.OnLoad();
 
-            mGameplay = new Gameplay();
+            gameplay = new Gameplay();
             
 
             mShader = new Shader("../Assets/Shaders/shader.vert", "../Assets/Shaders/shader.frag");
             mTexture0 = new Texture("../Assets/Textures/tiles_floor_5.png");
             mTexture1 = new Texture("../Assets/Textures/stone_hell_10.png");
 
-            mShader?.Use();
+            mShader?.Bind();
             mShader?.SetInt("texture0", 0);
             mShader?.SetInt("texture1", 1);
 
@@ -77,14 +88,19 @@ namespace Rexar.View
 
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             
-            proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
-            view = Matrix4.CreateTranslation(0.0f, 0.0f, -2.0f);
-            model = Matrix4.Identity;
+            PerPass perPass = new PerPass();
+            perPass.Proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f).Transposed();
+            perPass.View = Matrix4.CreateTranslation(0.0f, 0.0f, -2.0f).Transposed();
+            PerDraw perDraw = new PerDraw();
+            perDraw.World = Matrix4.Identity;
+            perDraw.Color = new Vector4(0, 1, 0, 1);
 
-            mShader?.SetMatrix4("model", ref model);
-            mShader?.SetMatrix4("view", ref view);
-            mShader?.SetMatrix4("proj", ref proj);
-
+            mShader?.SetMatrix4("model", ref perDraw.World);
+            mShader?.SetMatrix4("view", ref perPass.View);
+            mShader?.SetMatrix4("proj", ref perPass.Proj);
+            mShader?.UpdateUniformBuffer("PerPass", ref perPass);
+            mShader?.UpdateUniformBuffer("PerDraw", ref perDraw);
+            
             GL.Enable(EnableCap.DepthTest);
         }
 
@@ -102,16 +118,16 @@ namespace Rexar.View
             {
                 Close();
             }
-            mGameplay?.Update(0.0f);
+            gameplay?.Update(0.0f);
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            mTexture0?.Use(TextureUnit.Texture0);
-            mTexture1?.Use(TextureUnit.Texture1);
-            mShader?.Use();
+            mTexture0?.Bind(TextureUnit.Texture0);
+            mTexture1?.Bind(TextureUnit.Texture1);
+            mShader?.Bind();
             GL.BindVertexArray(mVAO);
 
             GL.DrawElements(PrimitiveType.Triangles, mIndices.Length, DrawElementsType.UnsignedInt, 0);

@@ -1,5 +1,3 @@
-using System;
-
 namespace Rexar.View
 {
     public class Program
