@@ -1,10 +1,8 @@
 using OpenTK.Graphics.OpenGL4;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 namespace Rexar.View.Rendering
 {
-    public class UniformBuffer
+    public class UniformBuffer : IDisposable
     {
         private string name;
         private int blockSize;

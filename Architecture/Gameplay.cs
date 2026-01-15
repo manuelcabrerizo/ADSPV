@@ -6,7 +6,7 @@ namespace Rexar.Architecture
 {
     public sealed class Gameplay : IUpdateable
     {
-        private EventBus? EventBus => ServiceProvider.Instance.GetService<EventBus>();
+        private EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
 
         public Gameplay()
         {
