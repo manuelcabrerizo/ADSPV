@@ -1,8 +1,8 @@
-﻿using Rexar.Architecture.Logs.Events;
-using Rexar.Toolbox.Events;
+﻿using Rexar.Toolbox.Events;
 using Rexar.Toolbox.Services;
+using ZooArchitect.Architecture.Logs.Events;
 
-namespace Rexar.Architecture.Logs
+namespace ZooArchitect.Architecture.Logs
 {
     public static class Console
     {

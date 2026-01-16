@@ -1,7 +1,7 @@
 ﻿using Rexar.Toolbox.Services;
 using Rexar.Toolbox.Updateable;
 
-namespace Rexar.Architecture.GameLogic
+namespace ZooArchitect.Architecture.GameLogic
 {
     public sealed class Time : IService, IUpdateable
     {

@@ -1,8 +1,9 @@
 using System;
+using System.IO;
 using OpenTK.Graphics.OpenGL4;
 using StbImageSharp;
 
-namespace Rexar.View
+namespace ZooArchitect.View.Rendering
 {
     public class Texture : IDisposable
     {

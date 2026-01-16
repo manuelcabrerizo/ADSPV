@@ -1,6 +1,6 @@
 ﻿using Rexar.Toolbox.Events;
 
-namespace Rexar.Architecture.Logs.Events
+namespace ZooArchitect.Architecture.Logs.Events
 {
     public struct ConsoleLogEvent : IEvent
     {

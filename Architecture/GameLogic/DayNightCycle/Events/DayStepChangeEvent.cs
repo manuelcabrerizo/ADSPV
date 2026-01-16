@@ -1,6 +1,6 @@
 ﻿using Rexar.Toolbox.Events;
 
-namespace Rexar.Architecture.GameLogic.Events
+namespace ZooArchitect.Architecture.GameLogic.Events
 {
     public struct DayStepChangeEvent : IEvent
     {

@@ -1,8 +1,11 @@
+using System;
+using System.Collections.Generic;
+
 namespace Rexar.Toolbox.Services
 {
     public sealed class ServiceProvider
     {
-        private static ServiceProvider? instance;
+        private static ServiceProvider instance;
         
         public static ServiceProvider Instance 
         {
@@ -42,7 +45,7 @@ namespace Rexar.Toolbox.Services
             return services.ContainsKey(typeof(ServiceType));
         }
 
-        public ServiceType? GetService<ServiceType>() where ServiceType : class, IService
+        public ServiceType GetService<ServiceType>() where ServiceType : class, IService
         {
             return services[typeof(ServiceType)] as ServiceType;
         }

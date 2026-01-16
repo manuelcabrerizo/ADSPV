@@ -1,12 +1,14 @@
 ﻿using Rexar.Toolbox.Events;
 using Rexar.Toolbox.Services;
-using Rexar.Architecture.GameLogic.Events;
+using Rexar.Toolbox.Scheduling;
+using ZooArchitect.Architecture.GameLogic.Events;
+using System.Collections.Generic;
 
-namespace Rexar.Architecture.GameLogic
+namespace ZooArchitect.Architecture.GameLogic
 {
     public sealed class DayNightCycle : IService
     {
-        private Toolbox.Scheduling.TaskScheduler TaskScheduler => ServiceProvider.Instance.GetService<Toolbox.Scheduling.TaskScheduler>();
+        private TaskScheduler TaskScheduler => ServiceProvider.Instance.GetService<TaskScheduler>();
         private EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
 
         public bool IsPersistance => false;

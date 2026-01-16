@@ -1,6 +1,7 @@
 using OpenTK.Graphics.OpenGL4;
+using System;
 
-namespace Rexar.View.Rendering
+namespace ZooArchitect.View.Rendering
 {
     public class UniformBuffer : IDisposable
     {

@@ -1,9 +1,10 @@
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
+using System;
 using System.Collections.Generic;
+using System.IO;
 
-
-namespace Rexar.View.Rendering
+namespace ZooArchitect.View.Rendering
 {
     public struct UniformBufferBindInfo
     {
@@ -89,8 +90,8 @@ namespace Rexar.View.Rendering
         {
             if(uniformBuffers.ContainsKey(name))
             {
-                UniformBuffer? uniformBuffer = sUniformBuffersRegistry[name];
-                uniformBuffer?.Update<DataType>(data);
+                UniformBuffer uniformBuffer = sUniformBuffersRegistry[name];
+                uniformBuffer.Update<DataType>(data);
             }
         }
 
@@ -146,7 +147,7 @@ namespace Rexar.View.Rendering
             for(int i = 0; i < names.Count; i++)
             {
                 int blockIndex = GL.GetUniformBlockIndex(handle, names[i]);
-                UniformBuffer? uniformBuffer = null;
+                UniformBuffer uniformBuffer = null;
                 if (sUniformBuffersRegistry.ContainsKey(names[i]))
                 {
                     uniformBuffer = sUniformBuffersRegistry[names[i]];

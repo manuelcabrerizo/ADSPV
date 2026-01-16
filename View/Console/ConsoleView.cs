@@ -1,8 +1,9 @@
-﻿using Rexar.Architecture.Logs.Events;
-using Rexar.Toolbox.Events;
+﻿using Rexar.Toolbox.Events;
 using Rexar.Toolbox.Services;
+using System;
+using ZooArchitect.Architecture.Logs.Events;
 
-namespace Rexar.View
+namespace ZooArchitect.View.Logs
 {
     public sealed class ConsoleView : IDisposable
     {

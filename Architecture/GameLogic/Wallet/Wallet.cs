@@ -1,6 +1,7 @@
 ﻿using Rexar.Toolbox.Services;
+using System.Collections.Generic;
 
-namespace Rexar.Architecture.GameLogic
+namespace ZooArchitect.Architecture.GameLogic
 {
     public sealed class Wallet : IService
     {

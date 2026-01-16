@@ -1,5 +1,7 @@
 using Rexar.Toolbox.Pool;
 using Rexar.Toolbox.Services;
+using System;
+using System.Collections.Generic;
 
 namespace Rexar.Toolbox.Events
 {
@@ -23,9 +25,9 @@ namespace Rexar.Toolbox.Events
         public void Unsubscribe<EventType>(Action<EventType> callback) where EventType : struct, IEvent
         {
             Type eventType = typeof(EventType);
-            if(subscribers.TryGetValue(eventType, out List<Delegate>? subscriptions))
+            if(subscribers.TryGetValue(eventType, out List<Delegate> subscriptions))
             {
-                subscriptions?.Remove(callback);
+                subscriptions.Remove(callback);
             }
         }
 
@@ -33,7 +35,7 @@ namespace Rexar.Toolbox.Events
         {
             Type eventType = typeof(EventType);
             EventType raisingEvent = eventPool.Get<EventType>(parameters);
-            if(subscribers.TryGetValue(eventType, out List<Delegate>? subscriptions))
+            if(subscribers.TryGetValue(eventType, out List<Delegate> subscriptions))
             {
                 foreach(Delegate callback in subscriptions)
                 {

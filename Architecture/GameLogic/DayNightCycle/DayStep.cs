@@ -1,4 +1,4 @@
-﻿namespace Rexar.Architecture.GameLogic
+﻿namespace ZooArchitect.Architecture.GameLogic
 {
     public struct DayStep
     {

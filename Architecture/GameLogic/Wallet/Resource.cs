@@ -1,4 +1,6 @@
-﻿namespace Rexar.Architecture.GameLogic
+﻿using System;
+
+namespace ZooArchitect.Architecture.GameLogic
 {
     public struct Resource
     {

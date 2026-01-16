@@ -2,22 +2,22 @@
 using Rexar.Toolbox.Services;
 using Rexar.Toolbox.Updateable;
 using Rexar.Toolbox.Scheduling;
-using Rexar.Architecture.Logs;
-using Rexar.Architecture.GameLogic;
+using ZooArchitect.Architecture.Logs;
+using ZooArchitect.Architecture.GameLogic;
 
-namespace Rexar.Architecture
+namespace ZooArchitect.Architecture
 {
     public sealed class Gameplay : IUpdateable
     {
         private EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
-        private Toolbox.Scheduling.TaskScheduler TaskScheduler => ServiceProvider.Instance.GetService<Toolbox.Scheduling.TaskScheduler>();
+        private TaskScheduler TaskScheduler => ServiceProvider.Instance.GetService<TaskScheduler>();
         private Time Time => ServiceProvider.Instance.GetService<Time>();
         private DayNightCycle DayNightCycle => ServiceProvider.Instance.GetService<DayNightCycle>();
 
         public Gameplay()
         {
             ServiceProvider.Instance.AddService<EventBus>(new EventBus());
-            ServiceProvider.Instance.AddService<Toolbox.Scheduling.TaskScheduler>(new Toolbox.Scheduling.TaskScheduler());
+            ServiceProvider.Instance.AddService<TaskScheduler>(new TaskScheduler());
             ServiceProvider.Instance.AddService<Time>(new Time());
             ServiceProvider.Instance.AddService<DayNightCycle>(new DayNightCycle());
             ServiceProvider.Instance.AddService<Wallet>(new Wallet());

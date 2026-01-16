@@ -1,4 +1,4 @@
-namespace Rexar.View
+namespace ZooArchitect.View
 {
     public class Program
     {
