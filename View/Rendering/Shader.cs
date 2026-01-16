@@ -16,7 +16,7 @@ namespace Rexar.View.Rendering
         private int handle;
         private bool disposedValue = false;
         private Dictionary<string, UniformBufferBindInfo> uniformBuffers = new Dictionary<string, UniformBufferBindInfo>();
-        static private Dictionary<string, UniformBuffer> sUniformBuffersRegistry = new Dictionary<string, UniformBuffer>();
+        private static Dictionary<string, UniformBuffer> sUniformBuffersRegistry = new Dictionary<string, UniformBuffer>();
         
         public Shader(string vertexPath, string fragmentPath)
         {

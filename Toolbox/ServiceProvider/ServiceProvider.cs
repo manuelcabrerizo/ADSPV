@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Rexar.Toolbox.Services
 {
     public sealed class ServiceProvider

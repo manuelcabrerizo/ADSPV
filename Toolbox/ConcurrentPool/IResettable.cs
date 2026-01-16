@@ -1,6 +1,6 @@
 namespace Rexar.Toolbox.Pool
 {
-    public interface IResetteable
+    public interface IResettable
     {
         public void Assign(params object[] parameters);
         public void Reset();

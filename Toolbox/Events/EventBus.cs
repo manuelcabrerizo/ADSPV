@@ -1,7 +1,5 @@
 using Rexar.Toolbox.Pool;
 using Rexar.Toolbox.Services;
-using System;
-using System.Collections.Generic;
 
 namespace Rexar.Toolbox.Events
 {

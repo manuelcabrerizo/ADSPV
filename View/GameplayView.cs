@@ -30,6 +30,7 @@ namespace Rexar.View
         private EventBus? EventBus => ServiceProvider.Instance.GetService<EventBus>();
         
         private Gameplay? gameplay = null;
+        private ConsoleView consoleView;
 
         // TODO: move all this to a Rendering system
         private Shader? mShader = null;
@@ -60,6 +61,7 @@ namespace Rexar.View
             base.OnLoad();
 
             gameplay = new Gameplay();
+            consoleView = new ConsoleView();
             
 
             mShader = new Shader("../Assets/Shaders/shader.vert", "../Assets/Shaders/shader.frag");
@@ -109,6 +111,7 @@ namespace Rexar.View
             base.OnUnload();
 
             mShader?.Dispose();
+            consoleView.Dispose();
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)
@@ -118,7 +121,7 @@ namespace Rexar.View
             {
                 Close();
             }
-            gameplay?.Update(0.0f);
+            gameplay?.Update((float)e.Time);
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)

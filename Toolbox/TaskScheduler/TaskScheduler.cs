@@ -20,9 +20,9 @@ namespace Rexar.Toolbox.Scheduling
         public bool IsPersistance => false;
         private readonly List<ScheduledCall> scheduledCalls;
 
-        public TaskScheduler(List<ScheduledCall> scheduledCalls)
+        public TaskScheduler()
         {
-            this.scheduledCalls = scheduledCalls;
+            this.scheduledCalls = new List<ScheduledCall>();
         }
 
         public void Schedule(Action callback, float remainingTime)
