@@ -117,5 +117,39 @@ namespace ZooArchitect.View
             perPass.View = Matrix4.CreateTranslation(0.0f, -50.0f, -150.0f).Transposed();
             shader.UpdateUniformBuffer("PerPass", ref perPass);
         }
+
+        private void SceneGraphTest()
+        {
+            Node house = new Node();
+            house.Local.SetRotate(Matrix3.Identity);
+            house.Local.SetTranslate(new Vector3(0, 0, 0));
+            house.Local.SetScale(new Vector3(1, 1, 1));
+
+            Node room1 = new Node();
+            room1.Local.SetRotate(Matrix3.Identity);
+            room1.Local.SetTranslate(new Vector3(-3, 0, 0));
+            room1.Local.SetScale(new Vector3(1, 1, 1));
+            house.AttachChild(room1);
+
+            Geometry table = new Geometry();
+            table.Local.SetRotate(Matrix3.Identity);
+            table.Local.SetTranslate(new Vector3(0, 2, 0));
+            table.Local.SetScale(new Vector3(1, 1, 1));
+            room1.AttachChild(table);
+
+            Geometry chair = new Geometry();
+            chair.Local.SetRotate(Matrix3.Identity);
+            chair.Local.SetTranslate(new Vector3(-1, 2, 0));
+            chair.Local.SetScale(new Vector3(1, 1, 1));
+            room1.AttachChild(chair);
+
+            Node room2 = new Node();
+            room2.Local.SetRotate(Matrix3.Identity);
+            room2.Local.SetTranslate(new Vector3(3, 0, 0));
+            room2.Local.SetScale(new Vector3(1, 1, 1));
+            house.AttachChild(room2);
+
+            house.UpdateGS(0, true);
+        }
     }
 }

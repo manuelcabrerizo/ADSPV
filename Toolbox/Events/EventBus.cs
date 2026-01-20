@@ -7,12 +7,14 @@ namespace Rexar.Toolbox.Events
 {
     public sealed class EventBus : IService
     {
+        public delegate void EventCallback<EventType>(in EventType callback) where EventType : struct, IEvent;
+
         public bool IsPersistance => false;
 
-        private ConcurrentPool eventPool = new ConcurrentPool();
+        private readonly ConcurrentPool eventPool = new ConcurrentPool();
         private readonly Dictionary<Type, List<Delegate>> subscribers = new Dictionary<Type, List<Delegate>>();
 
-        public void Subscribe<EventType>(Action<EventType> callback) where EventType : struct, IEvent
+        public void Subscribe<EventType>(EventCallback<EventType> callback) where EventType : struct, IEvent
         {
             Type eventType = typeof(EventType);
             if(!subscribers.ContainsKey(eventType))
@@ -22,7 +24,7 @@ namespace Rexar.Toolbox.Events
             subscribers[eventType].Add(callback);
         }
 
-        public void Unsubscribe<EventType>(Action<EventType> callback) where EventType : struct, IEvent
+        public void Unsubscribe<EventType>(EventCallback<EventType> callback) where EventType : struct, IEvent
         {
             Type eventType = typeof(EventType);
             if(subscribers.TryGetValue(eventType, out List<Delegate> subscriptions))
@@ -39,7 +41,7 @@ namespace Rexar.Toolbox.Events
             {
                 foreach(Delegate callback in subscriptions)
                 {
-                    ((Action<EventType>)callback)?.Invoke(raisingEvent);
+                    ((EventCallback<EventType>)callback)?.Invoke(raisingEvent);
                 }
             }
             eventPool.Release(raisingEvent);

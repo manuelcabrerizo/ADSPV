@@ -16,19 +16,19 @@ namespace ZooArchitect.View.Logs
             EventBus.Subscribe<ConsoleErrorEvent>(LogError);
         }
 
-        private void LogMessage(ConsoleLogEvent consolLogEvent)
+        private void LogMessage(in ConsoleLogEvent consolLogEvent)
         {
-            Console.WriteLine(consolLogEvent.Message);
+            Console.WriteLine("Log: " + consolLogEvent.Message);
         }
 
-        private void LogWarning(ConsoleWarningEvent consoleWarningEvent)
+        private void LogWarning(in ConsoleWarningEvent consoleWarningEvent)
         {
-            Console.WriteLine(consoleWarningEvent.Message);
+            Console.WriteLine("Warning: " + consoleWarningEvent.Message);
         }
 
-        private void LogError(ConsoleErrorEvent consoleErrorEvent)
+        private void LogError(in ConsoleErrorEvent consoleErrorEvent)
         {
-            Console.WriteLine(consoleErrorEvent.Message);
+            Console.WriteLine("Error: " + consoleErrorEvent.Message);
         }
 
         public void Dispose()
