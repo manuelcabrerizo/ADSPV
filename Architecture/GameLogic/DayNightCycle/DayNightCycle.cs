@@ -1,8 +1,9 @@
-﻿using Rexar.Toolbox.Events;
-using Rexar.Toolbox.Services;
+﻿using Rexar.Toolbox.Blueprint;
+using Rexar.Toolbox.Events;
 using Rexar.Toolbox.Scheduling;
-using ZooArchitect.Architecture.GameLogic.Events;
+using Rexar.Toolbox.Services;
 using System.Collections.Generic;
+using ZooArchitect.Architecture.GameLogic.Events;
 
 namespace ZooArchitect.Architecture.GameLogic
 {
@@ -10,6 +11,7 @@ namespace ZooArchitect.Architecture.GameLogic
     {
         private TaskScheduler TaskScheduler => ServiceProvider.Instance.GetService<TaskScheduler>();
         private EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
+        private BlueprintBinder BlueprintBinder => ServiceProvider.Instance.GetService<BlueprintBinder>();
 
         public bool IsPersistance => false;
 
@@ -27,12 +29,18 @@ namespace ZooArchitect.Architecture.GameLogic
         {
             currentStep = 0;
             daySteps = new List<DayStep>();
-            daySteps.Add(new DayStep("Manana", DAY_STEP_DURATION));
-            daySteps.Add(new DayStep("Mediodia", DAY_STEP_DURATION));
-            daySteps.Add(new DayStep("Tarde", DAY_STEP_DURATION));
-            daySteps.Add(new DayStep("Atardecer", DAY_STEP_DURATION));
-            daySteps.Add(new DayStep("Anochecer", DAY_STEP_DURATION));
-            daySteps.Add(new DayStep("Madrugada", DAY_STEP_DURATION));
+
+            object dayStep = new DayStep();
+            BlueprintBinder.Apply(ref dayStep, "DayNightCycle", "Manana");
+            daySteps.Add((DayStep)dayStep);
+            BlueprintBinder.Apply(ref dayStep, "DayNightCycle", "Mediodia");
+            daySteps.Add((DayStep)dayStep);
+            BlueprintBinder.Apply(ref dayStep, "DayNightCycle", "Atardecer");
+            daySteps.Add((DayStep)dayStep);
+            BlueprintBinder.Apply(ref dayStep, "DayNightCycle", "Anochecer");
+            daySteps.Add((DayStep)dayStep);
+            BlueprintBinder.Apply(ref dayStep, "DayNightCycle", "Madrugada");
+            daySteps.Add((DayStep)dayStep);
 
             TaskScheduler.Schedule(ChangeStep, DAY_STEP_DURATION * HOUR_DURATION);
         }

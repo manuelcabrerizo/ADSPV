@@ -24,7 +24,9 @@ namespace ZooArchitect.View
     }
 
     public class GameplayView : GameWindow
-    {        
+    {
+        private string BlueprintsPath => "../Assets/StreamingAssets/Blueprints.xlsx";
+
         private Gameplay gameplay;
         private ConsoleView consoleView;
 
@@ -43,7 +45,7 @@ namespace ZooArchitect.View
         {
             base.OnLoad();
 
-            gameplay = new Gameplay();
+            gameplay = new Gameplay(BlueprintsPath);
             consoleView = new ConsoleView();
             
             shader = new Shader("../Assets/Shaders/shader.vert", "../Assets/Shaders/shader.frag");

@@ -1,4 +1,5 @@
 ﻿using Architecture.GameLogic.Entities.Systems.Events;
+using Rexar.Toolbox.Blueprint;
 using Rexar.Toolbox.Events;
 using Rexar.Toolbox.Services;
 using System;
@@ -12,8 +13,8 @@ namespace ZooArchitect.Architecture.GameLogic.Entities.Systems
     public sealed class EntityFactory : IService
     {
         private EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
-
         private EntityRegistry EntityRegistry => ServiceProvider.Instance.GetService<EntityRegistry>();
+        private BlueprintBinder BlueprintBinder => ServiceProvider.Instance.GetService<BlueprintBinder>();
 
         private uint lastAssignedEntityId;
         public bool IsPersistance => false;
@@ -41,11 +42,13 @@ namespace ZooArchitect.Architecture.GameLogic.Entities.Systems
             {
                 throw new MissingMethodException($"Missing constructor for {typeof(EntityType).Name}");
             }
-            EntityType newEntity = entityConstructors[typeof(EntityType)].Invoke(new object[] {newEntityId, coordinate}) as EntityType;
+            object newEntity = entityConstructors[typeof(EntityType)].Invoke(new object[] {newEntityId, coordinate});
+
+            BlueprintBinder.Apply(ref newEntity, "Animals", "Monkey");
+
             if (registerEntityMethod == null)
             {
                 throw new MissingMethodException($"Missing EntityRegister register method");
-
             }
             registerEntityMethod.Invoke(EntityRegistry, new object[] { newEntity });
 
