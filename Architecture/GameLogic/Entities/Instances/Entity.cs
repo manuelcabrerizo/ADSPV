@@ -1,14 +1,10 @@
-﻿using Rexar.Toolbox.Blueprint;
-using ZooArchitect.Architecture.GameLogic.Math;
+﻿using ZooArchitect.Architecture.GameLogic.Math;
 
 namespace ZooArchitect.Architecture.GameLogic.Entities
 {
     public abstract class Entity
     {
         public const uint UNASSIGNED_ENTITY_ID = 0;
-
-        [BlueprintParameter("Name")] private string Name;
-        [BlueprintParameter("Food")] private int food;
 
         public uint ID;
         public Coordinate coordinate;

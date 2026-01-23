@@ -7,6 +7,7 @@ namespace Rexar.Toolbox.Blueprint
     {
         internal string this[string blueprintID, string parameter] => rawContent[blueprintIDs.IndexOf(blueprintID) + 1, parameters.IndexOf(parameter) + 1];
 
+        /*
         public string Get(string blueprintID, string parameter)
         {
             int indexBP = blueprintIDs.IndexOf(blueprintID) + 1;
@@ -14,6 +15,7 @@ namespace Rexar.Toolbox.Blueprint
             string result = rawContent[indexBP, indexPA];
             return result;
         }
+        */
 
 
         private readonly string[,] rawContent;
@@ -27,7 +29,7 @@ namespace Rexar.Toolbox.Blueprint
             int maxRow = 0;
             int maxColumn = 0;
 
-            for (int row = sheet.FirstRowNum; row <= sheet.LastRowNum; row++)
+            for (int row = 0; row <= sheet.LastRowNum; row++)
             {
                 IRow sheetRow = sheet.GetRow(row);
                 if (sheetRow == null)
@@ -51,7 +53,7 @@ namespace Rexar.Toolbox.Blueprint
 
             rawContent = new string[ maxRow, maxColumn ];
 
-            for (int row = sheet.FirstRowNum; row <= sheet.LastRowNum; row++)
+            for (int row = 0; row <= sheet.LastRowNum; row++)
             {
                 IRow sheetRow = sheet.GetRow(row);
                 if (sheetRow == null)

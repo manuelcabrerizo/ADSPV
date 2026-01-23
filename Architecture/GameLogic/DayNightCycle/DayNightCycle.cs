@@ -29,7 +29,7 @@ namespace ZooArchitect.Architecture.GameLogic
         {
             currentStep = 0;
             daySteps = new List<DayStep>();
-
+/*
             object dayStep = new DayStep();
             BlueprintBinder.Apply(ref dayStep, "DayNightCycle", "Manana");
             daySteps.Add((DayStep)dayStep);
@@ -41,7 +41,7 @@ namespace ZooArchitect.Architecture.GameLogic
             daySteps.Add((DayStep)dayStep);
             BlueprintBinder.Apply(ref dayStep, "DayNightCycle", "Madrugada");
             daySteps.Add((DayStep)dayStep);
-
+*/
             TaskScheduler.Schedule(ChangeStep, DAY_STEP_DURATION * HOUR_DURATION);
         }
 

@@ -17,31 +17,50 @@
 
         public static object Convert(string value, Type targetType)
         {
-            if (targetType == typeof(string))
-                return value;
-
-            Type nullableType = Nullable.GetUnderlyingType(targetType);
-            if (nullableType != null)
+            try
             {
-                if (string.IsNullOrEmpty(value))
-                    return null;
+                if (targetType == typeof(string))
+                    return value;
 
-                return Convert(value, nullableType);
+                if (targetType == typeof(bool))
+                {
+                    if (string.Equals(value.ToLower(), "true"))
+                    {
+                        return true;
+                    }
+                    if (string.Equals(value.ToLower(), "false"))
+                    {
+                        return false;
+                    }
+                }
+
+                Type nullableType = Nullable.GetUnderlyingType(targetType);
+                if (nullableType != null)
+                {
+                    if (string.IsNullOrEmpty(value))
+                        return null;
+
+                    return Convert(value, nullableType);
+                }
+
+                if (targetType.IsEnum)
+                    return Enum.Parse(targetType, value, true);
+
+                if (IsDictionary(targetType))
+                    return ConvertDictionary(value, targetType);
+
+                if (targetType.IsArray)
+                    return ConvertArray(value, targetType);
+
+                if (IsGenericCollection(targetType))
+                    return ConvertGenericCollection(value, targetType);
+
+                return System.Convert.ChangeType(value, targetType, CultureInfo.InvariantCulture);
             }
-
-            if (targetType.IsEnum)
-                return Enum.Parse(targetType, value, true);
-
-            if (IsDictionary(targetType))
-                return ConvertDictionary(value, targetType);
-
-            if (targetType.IsArray)
-                return ConvertArray(value, targetType);
-
-            if (IsGenericCollection(targetType))
-                return ConvertGenericCollection(value, targetType);
-
-            return System.Convert.ChangeType(value, targetType, CultureInfo.InvariantCulture);
+            catch(Exception)
+            {
+                throw new InvalidCastException($"Failed to convert {value} in to {targetType.Name}");
+            }
         }
 
         private static object ConvertDictionary(string value, Type dictionaryType)

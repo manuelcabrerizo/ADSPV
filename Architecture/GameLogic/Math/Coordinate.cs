@@ -1,14 +1,20 @@
-﻿namespace ZooArchitect.Architecture.GameLogic.Math
+﻿using System.Collections.Generic;
+
+namespace ZooArchitect.Architecture.GameLogic.Math
 {
     public struct Coordinate
     {
-        public int X;
-        public int Y;
+        private Point[] points;
+        public bool IsSingleCoordinate => points.Length == 1;
+        public IEnumerable<Point> Points => points;
 
-        public Coordinate(int x, int y)
+        public Coordinate(params Point[] points)
         {
-            X = x;
-            Y = y;
+            if (points == null || points.Length == 0)
+            {
+                throw new System.Exception();
+            }
+            this.points = points;
         }
     }
 }

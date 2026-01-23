@@ -27,7 +27,7 @@ namespace ZooArchitect.Architecture
             ServiceProvider.Instance.AddService<EntityRegistry>(new EntityRegistry());
             ServiceProvider.Instance.AddService<EntityFactory>(new EntityFactory());
 
-            // TEST
+            new Map(10, 10);
         }
 
         public void Update(float deltaTime)

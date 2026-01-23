@@ -31,9 +31,19 @@ namespace Rexar.Toolbox.Blueprint
                     (bool hasAttribute, BlueprintParameterAttribute attribute) blueprintParameter = GetBlueprintParameterAttribute(fieldInfo);
                     if (blueprintParameter.hasAttribute)
                     {
-                        fieldInfo.SetValue(instance, StringCast.Convert(
-                            BlueprintRegistry.BlueprintDatas[blueprintTable].Get(blueprintID, blueprintParameter.attribute.ParameterHeader),
-                            fieldInfo.FieldType));
+                        object castedValue;
+                        try
+                        {
+                            castedValue = StringCast.Convert(
+                                BlueprintRegistry.BlueprintDatas[blueprintTable][blueprintID, blueprintParameter.attribute.ParameterHeader],
+                                fieldInfo.FieldType);
+                        }
+                        catch (InvalidCastException exception)
+                        {
+                            throw new DataMisalignedException(exception.Message);
+                        }
+
+                        fieldInfo.SetValue(instance, castedValue);
                     }
                 }
                 instanceType = instanceType.BaseType;

@@ -1,11 +1,9 @@
 ﻿using Architecture.GameLogic.Entities.Systems.Events;
-using Rexar.Toolbox.Blueprint;
 using Rexar.Toolbox.Events;
 using Rexar.Toolbox.Services;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using ZooArchitect.Architecture.GameLogic.Entities.Animals;
 using ZooArchitect.Architecture.GameLogic.Math;
 
 namespace ZooArchitect.Architecture.GameLogic.Entities.Systems
@@ -14,7 +12,6 @@ namespace ZooArchitect.Architecture.GameLogic.Entities.Systems
     {
         private EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
         private EntityRegistry EntityRegistry => ServiceProvider.Instance.GetService<EntityRegistry>();
-        private BlueprintBinder BlueprintBinder => ServiceProvider.Instance.GetService<BlueprintBinder>();
 
         private uint lastAssignedEntityId;
         public bool IsPersistance => false;
@@ -30,8 +27,7 @@ namespace ZooArchitect.Architecture.GameLogic.Entities.Systems
             registerEntityMethod = EntityRegistry.GetType().GetMethod(EntityRegistry.RegisterMethodName, BindingFlags.NonPublic | BindingFlags.Instance);
             raiseEntityCreatedMethod = GetType().GetMethod(nameof(RaiseEntityCreatedMethod), BindingFlags.NonPublic | BindingFlags.Instance);
 
-            RegisterEntityMethods<Animal>();
-            CreateInstance<Animal>(new Coordinate(0, 0));
+            RegisterEntityMethods();
         }
 
         public void CreateInstance<EntityType>(Coordinate coordinate) where EntityType : Entity
@@ -44,7 +40,6 @@ namespace ZooArchitect.Architecture.GameLogic.Entities.Systems
             }
             object newEntity = entityConstructors[typeof(EntityType)].Invoke(new object[] {newEntityId, coordinate});
 
-            BlueprintBinder.Apply(ref newEntity, "Animals", "Monkey");
 
             if (registerEntityMethod == null)
             {
@@ -72,15 +67,25 @@ namespace ZooArchitect.Architecture.GameLogic.Entities.Systems
             EventBus.Raise<EntityCreatedEvent<EntityType>>(newEntity.ID);
         }
 
-        private void RegisterEntityMethods<EntityType>() where EntityType : Entity
+        private void RegisterEntityMethods()
         {
-            Type entityType = typeof(EntityType);
-            if (entityType.IsClass && !entityType.IsAbstract)
+            foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
             {
-                foreach (ConstructorInfo constructorInfo in entityType.GetConstructors(BindingFlags.NonPublic|BindingFlags.Instance))
-                { 
+                if (type.IsClass && !type.IsAbstract)
+                {
+                    if (typeof(Entity).IsAssignableFrom(type))
+                    {
+                        RegisterEntity(type);
+                    }
+                }
+            }
+
+            void RegisterEntity(Type entityType)
+            {
+                foreach (ConstructorInfo constructorInfo in entityType.GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance))
+                {
                     ParameterInfo[] parameters = constructorInfo.GetParameters();
-                    if (parameters.Length == 2 && 
+                    if (parameters.Length == 2 &&
                         parameters[0].ParameterType == typeof(uint) &&
                         parameters[1].ParameterType == typeof(Coordinate))
                     {
