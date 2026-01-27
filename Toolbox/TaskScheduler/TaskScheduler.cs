@@ -1,11 +1,11 @@
 using Rexar.Toolbox.Services;
-using Rexar.Toolbox.Updateable;
+using Rexar.Toolbox.DataFlow;
 using System;
 using System.Collections.Generic;
 
 namespace Rexar.Toolbox.Scheduling
 {
-    public sealed class TaskScheduler : IService, IUpdateable
+    public sealed class TaskScheduler : IService, ITickable
     {
         public sealed class ScheduledCall
         {
@@ -32,7 +32,7 @@ namespace Rexar.Toolbox.Scheduling
             scheduledCalls.Add(new ScheduledCall(callback, remainingTime));
         }
 
-        public void Update(float deltaTime)
+        public void Tick(float deltaTime)
         {
             for(int i = scheduledCalls.Count - 1; i >= 0; i--)
             {

@@ -6,6 +6,7 @@ namespace ZooArchitect.Architecture.GameLogic.Math
     {
         private Point[] points;
         public bool IsSingleCoordinate => points.Length == 1;
+        public Point Origin => points[0];
         public IEnumerable<Point> Points => points;
 
         public Coordinate(params Point[] points)

@@ -1,0 +1,76 @@
+﻿using OpenTK.Mathematics;
+using OpenTK.Windowing.Common;
+using OpenTK.Windowing.Desktop;
+using OpenTK.Windowing.GraphicsLibraryFramework;
+using Rexar.Toolbox.Services;
+using View.Rendering;
+
+namespace ZooArchitect.View
+{
+    public sealed class Game : GameWindow
+    {
+        private Engine Engine => ServiceProvider.Instance.GetService<Engine>();
+        private Graphics Graphics => ServiceProvider.Instance.GetService<Graphics>();
+
+        public Game(int width, int height, string title)
+            : base(GameWindowSettings.Default, new NativeWindowSettings() { ClientSize = (width, height), Title = title })
+        {
+            ServiceProvider.Instance.AddService<Engine>(new Engine());
+            ServiceProvider.Instance.AddService<Graphics>(new Graphics());
+            CreateDefaultGameObjects();
+        }
+
+        protected override void OnLoad()
+        {
+            base.OnLoad();
+
+            Engine.Init();
+            Engine.LateInit();
+
+            Graphics.SetProj(Matrix4.CreateOrthographic(800.0f, 600.0f, 0.0f, 100.0f).Transposed());
+            Graphics.SetView(Matrix4.CreateTranslation(0.0f, 0.0f, 0.0f).Transposed());
+        }
+
+        protected override void OnUnload()
+        {
+            base.OnUnload();
+
+            Graphics.Dispose();
+        }
+
+        protected override void OnUpdateFrame(FrameEventArgs e)
+        {
+            base.OnUpdateFrame(e);
+            if (KeyboardState.IsKeyDown(Keys.Escape))
+            {
+                Close();
+            }
+        }
+
+        protected override void OnRenderFrame(FrameEventArgs e)
+        {
+            Graphics.DrawBegin();
+
+            float deltaTime = (float)e.Time;
+            Engine.Tick(deltaTime);
+
+            Graphics.DrawEnd();
+
+            SwapBuffers();
+            base.OnRenderFrame(e);
+        }
+
+        protected override void OnFramebufferResize(FramebufferResizeEventArgs e)
+        {
+            base.OnFramebufferResize(e);
+            Graphics.OnResize(e.Width, e.Height);
+            Graphics.SetProj(Matrix4.CreateOrthographic((float)e.Width, (float)e.Height, 0.0f, 100.0f).Transposed());
+        }
+
+        private void CreateDefaultGameObjects()
+        {
+            GameObject view = Engine.Instantiate(null, Vector3.Zero);
+            view.AddComponent<GameplayView>(new GameplayView(view));
+        }
+    }
+}

@@ -2,6 +2,8 @@
 {
     public static class TableNames
     {
+        public const string ANIMALS_TABLE_NAME = "Animals";
         public const string TILE_TYPES_TABLE_NAME = "Tile Types";
+        public const string DAY_NIGHT_CYCLE_TABLE_NAME = "DayNightCycle";
     }
 }

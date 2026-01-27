@@ -1,8 +1,9 @@
-﻿using ZooArchitect.Architecture.GameLogic.Math;
+﻿using Rexar.Toolbox.DataFlow;
+using ZooArchitect.Architecture.GameLogic.Math;
 
 namespace ZooArchitect.Architecture.GameLogic.Entities
 {
-    public abstract class Entity
+    public abstract class Entity : IInitable, ITickable
     {
         public const uint UNASSIGNED_ENTITY_ID = 0;
 
@@ -14,5 +15,9 @@ namespace ZooArchitect.Architecture.GameLogic.Entities
             this.ID = ID;
             this.coordinate = coordinate;
         }
+
+        public virtual void Init() { }
+        public virtual void LateInit() { }
+        public virtual void Tick(float deltaTime) { }
     }
 }

@@ -7,17 +7,6 @@ namespace Rexar.Toolbox.Blueprint
     {
         internal string this[string blueprintID, string parameter] => rawContent[blueprintIDs.IndexOf(blueprintID) + 1, parameters.IndexOf(parameter) + 1];
 
-        /*
-        public string Get(string blueprintID, string parameter)
-        {
-            int indexBP = blueprintIDs.IndexOf(blueprintID) + 1;
-            int indexPA = parameters.IndexOf(parameter) + 1;
-            string result = rawContent[indexBP, indexPA];
-            return result;
-        }
-        */
-
-
         private readonly string[,] rawContent;
         private readonly List<string> blueprintIDs;
         private readonly List<string> parameters;

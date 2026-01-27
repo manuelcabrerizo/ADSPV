@@ -86,9 +86,9 @@ namespace ZooArchitect.View.Rendering
             }
         }
 
-        public void UpdateUniformBuffer<DataType>(string name, ref DataType data) where DataType : struct
+        static public void UpdateUniformBuffer<DataType>(string name, ref DataType data) where DataType : struct
         {
-            if(uniformBuffers.ContainsKey(name))
+            if(sUniformBuffersRegistry.ContainsKey(name))
             {
                 UniformBuffer uniformBuffer = sUniformBuffersRegistry[name];
                 uniformBuffer.Update<DataType>(data);

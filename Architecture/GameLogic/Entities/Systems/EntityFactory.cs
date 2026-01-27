@@ -1,9 +1,12 @@
-﻿using Architecture.GameLogic.Entities.Systems.Events;
+﻿using Architecture.GameLogic.Entities;
+using Architecture.GameLogic.Entities.Systems.Events;
+using Rexar.Toolbox.Blueprint;
 using Rexar.Toolbox.Events;
 using Rexar.Toolbox.Services;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using ZooArchitect.Architecture.Data;
 using ZooArchitect.Architecture.GameLogic.Math;
 
 namespace ZooArchitect.Architecture.GameLogic.Entities.Systems
@@ -12,6 +15,8 @@ namespace ZooArchitect.Architecture.GameLogic.Entities.Systems
     {
         private EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
         private EntityRegistry EntityRegistry => ServiceProvider.Instance.GetService<EntityRegistry>();
+        private BlueprintBinder BlueprintBinder => ServiceProvider.Instance.GetService<BlueprintBinder>();
+
 
         private uint lastAssignedEntityId;
         public bool IsPersistance => false;
@@ -30,7 +35,7 @@ namespace ZooArchitect.Architecture.GameLogic.Entities.Systems
             RegisterEntityMethods();
         }
 
-        public void CreateInstance<EntityType>(Coordinate coordinate) where EntityType : Entity
+        public void CreateInstance<EntityType>(string blueprintId, Coordinate coordinate) where EntityType : Entity
         {
             lastAssignedEntityId++;
             uint newEntityId = lastAssignedEntityId;
@@ -38,8 +43,12 @@ namespace ZooArchitect.Architecture.GameLogic.Entities.Systems
             {
                 throw new MissingMethodException($"Missing constructor for {typeof(EntityType).Name}");
             }
+
             object newEntity = entityConstructors[typeof(EntityType)].Invoke(new object[] {newEntityId, coordinate});
 
+            BlueprintBinder.Apply(ref newEntity, TableNames.ANIMALS_TABLE_NAME, blueprintId);
+
+            (newEntity as EntityType).Init();
 
             if (registerEntityMethod == null)
             {
@@ -58,13 +67,15 @@ namespace ZooArchitect.Architecture.GameLogic.Entities.Systems
 
             for (int i = entityTypes.Count - 1; i >= 0; i--)
             {
-                raiseEntityCreatedMethod.MakeGenericMethod(entityTypes[i]).Invoke(this, new object[] { newEntity });
+                raiseEntityCreatedMethod.MakeGenericMethod(entityTypes[i]).Invoke(this, new object[] { blueprintId, newEntity });
             }
+
+            (newEntity as EntityType).LateInit();
         }
 
-        private void RaiseEntityCreatedMethod<EntityType>(EntityType newEntity) where EntityType : Entity
+        private void RaiseEntityCreatedMethod<EntityType>(string blueprintId, EntityType newEntity) where EntityType : Entity
         {
-            EventBus.Raise<EntityCreatedEvent<EntityType>>(newEntity.ID);
+            EventBus.Raise<EntityCreatedEvent<EntityType>>(blueprintId, newEntity.ID, newEntity.coordinate);
         }
 
         private void RegisterEntityMethods()
