@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace ZooArchitect.View.Rendering
+namespace View.Engine.Rendering
 {
     class Node : Spatial
     {

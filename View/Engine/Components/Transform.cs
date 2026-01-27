@@ -8,11 +8,11 @@ namespace ZooArchitect.View
         public Vector3 size;
         public float rotation;
 
-        public Transform() : base(null)
+        public Transform()
         {
         }
 
-        public Transform(GameObject owner, Vector3 position, Vector3 size, float rotation) : base(owner)
+        public Transform(GameObject owner, Vector3 position, Vector3 size, float rotation)
         {
             this.position = position;
             this.size = size;

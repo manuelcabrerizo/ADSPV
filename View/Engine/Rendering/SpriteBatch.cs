@@ -1,9 +1,8 @@
 ﻿using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using System;
-using ZooArchitect.View.Rendering;
 
-namespace View.Rendering
+namespace View.Engine.Rendering
 {
     public struct BatchVertex
     {
@@ -30,7 +29,7 @@ namespace View.Rendering
             shader = new Shader("../Assets/Shaders/batch.vert", "../Assets/Shaders/batch.frag");
 
             this.batchSize = batchSize;
-            this.used = 0;
+            used = 0;
 
             vao = GL.GenVertexArray();
             GL.BindVertexArray(vao);

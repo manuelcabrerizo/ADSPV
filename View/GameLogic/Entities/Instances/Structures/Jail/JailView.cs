@@ -3,13 +3,9 @@ using System;
 
 namespace ZooArchitect.View.GameLogic.Entities.Instances
 {
+    [ViewOf(typeof(Jail))]
     internal sealed class JailView : StructureView
     {
-        public JailView(GameObject owner) : base(owner)
-        {
-        }
-
         public override Type ArchitectureEntityType => typeof(Jail);
-
     }
 }

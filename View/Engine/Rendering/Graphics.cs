@@ -2,9 +2,8 @@
 using OpenTK.Mathematics;
 using Rexar.Toolbox.Services;
 using System;
-using ZooArchitect.View.Rendering;
 
-namespace View.Rendering
+namespace View.Engine.Rendering
 {
     public struct PerPass
     {

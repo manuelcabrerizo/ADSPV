@@ -2,6 +2,7 @@
 using Rexar.Toolbox.Services;
 using System.Collections.Generic;
 using System.IO;
+using ZooArchitect.Architecture.Logs;
 using ZooArchitect.View.Data;
 
 namespace ZooArchitect.View.Resources
@@ -17,10 +18,13 @@ namespace ZooArchitect.View.Resources
         private Dictionary<string, string> prefabPaths;
         private Dictionary<string, GameObject> prefabs;
 
+        private GameObject missingPrefab;
+
         public PrefabsRegistryView()
         {
             prefabs = new Dictionary<string, GameObject>();
             prefabPaths = new Dictionary<string, string>();
+            missingPrefab = Engine.LoadPrefab("../Prefabs/Error.xml");
             foreach (string id in BlueprintRegistry.BlueprintsOf(TableNamesView.PREFABS_VIEW_TABLE_NAME))
             {
                 object prefabPath = new PrefabPath();
@@ -38,6 +42,11 @@ namespace ZooArchitect.View.Resources
                 return prefabs[resourcePath];
             }
             GameObject prefab = Engine.LoadPrefab(resourcePath);
+            if (prefab == null)
+            {
+                prefab = missingPrefab;
+                Console.Warning($"Missing prefab in foulder: {resourcePath}");
+            }
             prefabs.Add(resourcePath, prefab);
             return prefab;
         }

@@ -1,6 +1,6 @@
 using OpenTK.Mathematics;
 
-namespace ZooArchitect.View.Rendering
+namespace View.Engine.Rendering
 {
     class Transformation
     {
@@ -9,9 +9,9 @@ namespace ZooArchitect.View.Rendering
         private Vector3 scale;
         public Transformation()
         {
-            this.rotate = Matrix3.Identity;
-            this.translate = Vector3.Zero;
-            this.scale = Vector3.One;
+            rotate = Matrix3.Identity;
+            translate = Vector3.Zero;
+            scale = Vector3.One;
         }
 
         public void SetRotate(Matrix3 rotate)

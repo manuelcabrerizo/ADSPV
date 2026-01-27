@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using OpenTK.Graphics.OpenGL4;
 
-namespace ZooArchitect.View.Rendering
+namespace View.Engine.Rendering
 {
     public sealed class Mesh : IDisposable
     {

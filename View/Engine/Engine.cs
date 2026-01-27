@@ -3,6 +3,7 @@ using Rexar.Toolbox.DataFlow;
 using Rexar.Toolbox.Services;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Xml;
 
 namespace ZooArchitect.View
@@ -84,7 +85,6 @@ namespace ZooArchitect.View
                 {
                     Type componentType = component.GetType();
                     Component newComponent = gameObject.AddComponent(componentType);
-                    newComponent.SetOwner(gameObject);
                     newComponent.Copy(component);
                 }
                 gameObjectsToInit.Add(gameObject);
@@ -101,41 +101,48 @@ namespace ZooArchitect.View
                 return gameObject;
             }
         }
+
+        // TODO: use reflection to make this function better
         public GameObject LoadPrefab(string prefabPath)
         {
-            GameObject gameObject = new GameObject();
-
-            XmlDocument doc = new XmlDocument();
-            doc.Load(prefabPath);
-
-            for (int i = 0; i < doc.DocumentElement.ChildNodes.Count; i++)
+            try
             {
-                var node = doc.DocumentElement.ChildNodes[i];
-                if (string.Equals(node.Name, "Transform"))
+                GameObject gameObject = new GameObject();
+                XmlDocument doc = new XmlDocument();
+                doc.Load(prefabPath);
+                for (int i = 0; i < doc.DocumentElement.ChildNodes.Count; i++)
                 {
-                    var childs = node.ChildNodes;
-                    Vector3 position = Vector3.Zero;
-                    position.X = float.Parse(childs[0].Attributes["x"].Value);
-                    position.Y = float.Parse(childs[0].Attributes["y"].Value);
-                    position.Z = float.Parse(childs[0].Attributes["z"].Value);
-                    Vector3 size = Vector3.One;
-                    size.X = float.Parse(childs[1].Attributes["x"].Value);
-                    size.Y = float.Parse(childs[1].Attributes["y"].Value);
-                    size.Z = float.Parse(childs[1].Attributes["z"].Value);
-                    float rotation = float.Parse(childs[2].Attributes["r"].Value);
-                    gameObject.AddComponent<Transform>(new Transform(gameObject, position, size, rotation));
+                    var node = doc.DocumentElement.ChildNodes[i];
+                    if (string.Equals(node.Name, "Transform"))
+                    {
+                        var childs = node.ChildNodes;
+                        Vector3 position = Vector3.Zero;
+                        position.X = float.Parse(childs[0].Attributes["x"].Value);
+                        position.Y = float.Parse(childs[0].Attributes["y"].Value);
+                        position.Z = float.Parse(childs[0].Attributes["z"].Value);
+                        Vector3 size = Vector3.One;
+                        size.X = float.Parse(childs[1].Attributes["x"].Value);
+                        size.Y = float.Parse(childs[1].Attributes["y"].Value);
+                        size.Z = float.Parse(childs[1].Attributes["z"].Value);
+                        float rotation = float.Parse(childs[2].Attributes["r"].Value);
+                        gameObject.AddComponent<Transform>(new Transform(gameObject, position, size, rotation));
+                    }
+                    else if (string.Equals(node.Name, "Sprite"))
+                    {
+                        var childs = node.ChildNodes;
+                        Vector3 color = Vector3.Zero;
+                        color.X = float.Parse(childs[0].Attributes["x"].Value);
+                        color.Y = float.Parse(childs[0].Attributes["y"].Value);
+                        color.Z = float.Parse(childs[0].Attributes["z"].Value);
+                        gameObject.AddComponent<Sprite>(new Sprite(gameObject, color));
+                    }
                 }
-                else if (string.Equals(node.Name, "Sprite"))
-                {
-                    var childs = node.ChildNodes;
-                    Vector3 color = Vector3.Zero;
-                    color.X = float.Parse(childs[0].Attributes["x"].Value);
-                    color.Y = float.Parse(childs[0].Attributes["y"].Value);
-                    color.Z = float.Parse(childs[0].Attributes["z"].Value);
-                    gameObject.AddComponent<Sprite>(new Sprite(gameObject, color));
-                }
+                return gameObject;
             }
-            return gameObject;
+            catch (FileNotFoundException e)
+            { 
+                return null;
+            }
         }
         public void Destroy(GameObject gameObject)
         {

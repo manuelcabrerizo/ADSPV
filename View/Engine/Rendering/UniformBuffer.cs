@@ -1,7 +1,7 @@
 using OpenTK.Graphics.OpenGL4;
 using System;
 
-namespace ZooArchitect.View.Rendering
+namespace View.Engine.Rendering
 {
     public class UniformBuffer : IDisposable
     {
@@ -17,7 +17,7 @@ namespace ZooArchitect.View.Rendering
 
             buffer = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.UniformBuffer, buffer);
-            GL.BufferData(BufferTarget.UniformBuffer, blockSize, IntPtr.Zero, BufferUsageHint.DynamicDraw);
+            GL.BufferData(BufferTarget.UniformBuffer, blockSize, nint.Zero, BufferUsageHint.DynamicDraw);
         }
 
         ~UniformBuffer()
@@ -37,7 +37,7 @@ namespace ZooArchitect.View.Rendering
         {
             //Console.WriteLine($"GL BlockSize: {blockSize} | C# StructSize: {Unsafe.SizeOf<DataType>()}");
             GL.BindBuffer(BufferTarget.UniformBuffer, buffer);
-            GL.BufferSubData(BufferTarget.UniformBuffer, IntPtr.Zero, blockSize, ref data);
+            GL.BufferSubData(BufferTarget.UniformBuffer, nint.Zero, blockSize, ref data);
             GL.BindBuffer(BufferTarget.UniformBuffer, 0);
         }
 

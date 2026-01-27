@@ -3,11 +3,9 @@ using System;
 
 namespace ZooArchitect.View.GameLogic.Entities.Instances
 {
+    [ViewOf(typeof(LivingEntity))]
     internal abstract class LivingEntityView : EntityView 
     {
         public override Type ArchitectureEntityType => typeof(LivingEntity);
-        protected LivingEntityView(GameObject owner) : base(owner)
-        {
-        }
     }
 }

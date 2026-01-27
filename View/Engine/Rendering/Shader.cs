@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace ZooArchitect.View.Rendering
+namespace View.Engine.Rendering
 {
     public struct UniformBufferBindInfo
     {
@@ -91,7 +91,7 @@ namespace ZooArchitect.View.Rendering
             if(sUniformBuffersRegistry.ContainsKey(name))
             {
                 UniformBuffer uniformBuffer = sUniformBuffersRegistry[name];
-                uniformBuffer.Update<DataType>(data);
+                uniformBuffer.Update(data);
             }
         }
 

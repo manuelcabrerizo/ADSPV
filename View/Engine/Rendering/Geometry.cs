@@ -1,4 +1,4 @@
-namespace ZooArchitect.View.Rendering
+namespace View.Engine.Rendering
 {
     class Geometry : Spatial
     {

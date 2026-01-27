@@ -38,8 +38,6 @@ namespace ZooArchitect.Architecture
         {
             new Map(10, 10);
             EntityFactory.CreateInstance<Animal>("Monkey", new Coordinate(new Point(0, 0)));
-            EntityFactory.CreateInstance<Animal>("Monkey", new Coordinate(new Point(100, 100)));
-
         }
 
         public void Tick(float deltaTime)
@@ -47,6 +45,5 @@ namespace ZooArchitect.Architecture
             Time.Tick(deltaTime);
             TaskScheduler.Tick(Time.LogicDeltaTime);
         }
-
     }
 }

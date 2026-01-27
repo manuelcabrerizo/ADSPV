@@ -2,10 +2,6 @@
 {
     internal class ViewComponent : Component
     {
-        public ViewComponent(GameObject owner) : base(owner)
-        {
-        }
-
         public override void Copy(Component component)
         {
         }

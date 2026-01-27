@@ -6,6 +6,7 @@ using ZooArchitect.View.Resources;
 
 namespace ZooArchitect.View
 {
+    [ViewOf(typeof(Gameplay))]
     public class GameplayView : Component
     {
         private string BlueprintsPath => "../Assets/StreamingAssets/Blueprints.xlsx";
@@ -14,25 +15,22 @@ namespace ZooArchitect.View
         private ConsoleView consoleView;
 
         private EntityFactoryView entityFactoryView;
-        public GameplayView(GameObject owner) : base(owner) 
-        {
-        }
 
         public override void Init()
         {
+            ViewArchitectureMap.Init();
             gameplay = new Gameplay(BlueprintsPath);
-            consoleView = new ConsoleView();
 
             ServiceProvider.Instance.AddService<PrefabsRegistryView>(new PrefabsRegistryView());
             ServiceProvider.Instance.AddService<EntityRegistryView>(new EntityRegistryView());
+            entityFactoryView = new EntityFactoryView();
+
+            consoleView = new ConsoleView();
         }
 
         public override void LateInit()
         {
             gameplay.Init();
-
-            entityFactoryView = new EntityFactoryView();
-
             gameplay.LateInit();
         }
 

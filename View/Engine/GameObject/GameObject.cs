@@ -7,7 +7,6 @@ namespace ZooArchitect.View
     public class GameObject : IInitable, ITickable
     {
         private Dictionary<Type, Component> components;
-
         public Dictionary<Type, Component>.ValueCollection Components => components.Values;
 
         public GameObject() 
@@ -40,14 +39,27 @@ namespace ZooArchitect.View
 
         public Component AddComponent(Type componentType)
         {
-            Component component = Activator.CreateInstance(componentType) as Component;
-            components.Add(componentType, component); 
-            return component;
+            if (!components.ContainsKey(componentType))
+            {
+                Component component = Activator.CreateInstance(componentType) as Component;
+                components.Add(componentType, component);
+                component.SetOwner(this);
+                return component;
+            }
+            throw new InvalidOperationException(); // TODO: custom exception
         }
 
         public void AddComponent<ComponentType>(ComponentType component) where ComponentType : Component
         {
-            components.Add(typeof(ComponentType), component);
+            if (!components.ContainsKey(typeof(ComponentType)))
+            {
+                component.SetOwner(this);
+                components.Add(typeof(ComponentType), component);
+            }
+            else
+            {
+                throw new InvalidOperationException(); // TODO: custom exception
+            }
         }
 
         public void RemoveComponent<ComponentType>() where ComponentType : Component

@@ -3,16 +3,16 @@ using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using Rexar.Toolbox.Services;
-using View.Rendering;
+using View.Engine.Rendering;
 
 namespace ZooArchitect.View
 {
-    public sealed class Game : GameWindow
+    public sealed class Framework : GameWindow
     {
         private Engine Engine => ServiceProvider.Instance.GetService<Engine>();
         private Graphics Graphics => ServiceProvider.Instance.GetService<Graphics>();
 
-        public Game(int width, int height, string title)
+        public Framework(int width, int height, string title)
             : base(GameWindowSettings.Default, new NativeWindowSettings() { ClientSize = (width, height), Title = title })
         {
             ServiceProvider.Instance.AddService<Engine>(new Engine());
@@ -70,7 +70,7 @@ namespace ZooArchitect.View
         private void CreateDefaultGameObjects()
         {
             GameObject view = Engine.Instantiate(null, Vector3.Zero);
-            view.AddComponent<GameplayView>(new GameplayView(view));
+            view.AddComponent<GameplayView>(new GameplayView());
         }
     }
 }

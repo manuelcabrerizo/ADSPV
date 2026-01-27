@@ -2,10 +2,12 @@
 using System;
 using System.Collections.Generic;
 using ZooArchitect.Architecture.GameLogic.Entities;
+using ZooArchitect.Architecture.GameLogic.Entities.Systems;
 using ZooArchitect.View.GameLogic.Entities.Instances;
 
 namespace ZooArchitect.View.GameLogic.Entities.Systems
 {
+    [ViewOf(typeof(EntityRegistry))]
     internal sealed class EntityRegistryView : IService
     {
         public bool IsPersistance => false;

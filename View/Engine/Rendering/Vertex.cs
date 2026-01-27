@@ -1,6 +1,6 @@
 ﻿using OpenTK.Mathematics;
 
-namespace ZooArchitect.View.Rendering
+namespace View.Engine.Rendering
 {
     public struct Vertex
     {

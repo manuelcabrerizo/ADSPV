@@ -3,7 +3,7 @@ using OpenTK.Mathematics;
 using System;
 using System.Collections.Generic;
 
-namespace ZooArchitect.View.Rendering
+namespace View.Engine.Rendering
 {
     public sealed class Model : IDisposable
     {

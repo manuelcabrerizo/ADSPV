@@ -1,7 +1,7 @@
 ﻿using OpenTK.Mathematics;
 using Rexar.Toolbox.DataFlow;
 using Rexar.Toolbox.Services;
-using View.Rendering;
+using View.Engine.Rendering;
 
 namespace ZooArchitect.View
 {
@@ -13,11 +13,11 @@ namespace ZooArchitect.View
 
         private Transform transform;
 
-        public Sprite() : base(null)
+        public Sprite()
         {
         }
 
-        public Sprite(GameObject owner, Vector3 color) : base(owner)
+        public Sprite(GameObject owner, Vector3 color)
         {
             this.color = color;
         }

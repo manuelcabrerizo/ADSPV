@@ -3,12 +3,9 @@ using System;
 
 namespace ZooArchitect.View.GameLogic.Entities.Instances
 {
+    [ViewOf(typeof(Structure))]
     internal abstract class StructureView : EntityView
     {
-        protected StructureView(GameObject owner) : base(owner)
-        {
-        }
-
         public override Type ArchitectureEntityType => typeof(Structure);
     }
 }
