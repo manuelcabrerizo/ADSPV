@@ -11,39 +11,27 @@ namespace ZooArchitect.View
     {
         public bool IsPersistance => true;
 
-
         List<GameObject> gameObjects;
-        List<GameObject> gameObjectsToAdd;
+        List<GameObject> gameObjectsToInit;
+        List<GameObject> gameObjectsToLateInit;
         List<GameObject> gameObjectsToRemove;
 
         public Engine()
         {
             gameObjects = new List<GameObject>();
-            gameObjectsToAdd = new List<GameObject>();
+            gameObjectsToInit = new List<GameObject>();
+            gameObjectsToLateInit = new List<GameObject>();
             gameObjectsToRemove = new List<GameObject>();
         }
 
         public void Init()
         {
-            foreach (GameObject go in gameObjectsToAdd)
-            {
-                gameObjects.Add(go);
-            }
-            gameObjectsToAdd.Clear();
-
-
-            foreach (GameObject gameObject in gameObjects)
-            {
-                gameObject.Init();
-            }
+            InitNewGameObjects();
         }
 
         public void LateInit()
         {
-            foreach (GameObject gameObject in gameObjects)
-            {
-                gameObject.LateInit();
-            }
+            LateInitNewGameObjects();
         }
 
         public void Tick(float deltaTime)
@@ -60,20 +48,22 @@ namespace ZooArchitect.View
 
         private void InitNewGameObjects()
         {
-            foreach (GameObject go in gameObjectsToAdd)
-            {
-                go.Init();
+            for (int i = gameObjectsToInit.Count - 1; i >= 0; i--)
+            { 
+                gameObjectsToInit[i].Init();
+                gameObjectsToLateInit.Add(gameObjectsToInit[i]);
+                gameObjectsToInit.RemoveAt(i);
             }
         }
 
         private void LateInitNewGameObjects()
         {
-            foreach (GameObject go in gameObjectsToAdd)
+            for (int i = gameObjectsToLateInit.Count - 1; i >= 0; i--)
             {
-                go.LateInit();
-                gameObjects.Add(go);
+                gameObjectsToLateInit[i].LateInit();
+                gameObjects.Add(gameObjectsToLateInit[i]);
+                gameObjectsToLateInit.RemoveAt(i);
             }
-            gameObjectsToAdd.Clear();
         }
 
         private void RemoveDeletedGameObjects()
@@ -97,7 +87,7 @@ namespace ZooArchitect.View
                     newComponent.SetOwner(gameObject);
                     newComponent.Copy(component);
                 }
-                gameObjectsToAdd.Add(gameObject);
+                gameObjectsToInit.Add(gameObject);
 
                 Transform transform = gameObject.GetComponent<Transform>();
                 transform.position = position;
@@ -107,7 +97,7 @@ namespace ZooArchitect.View
             {
                 GameObject gameObject = new GameObject();
                 gameObject.AddComponent<Transform>(new Transform(gameObject, position, Vector3.One, 0.0f));
-                gameObjectsToAdd.Add(gameObject);
+                gameObjectsToInit.Add(gameObject);
                 return gameObject;
             }
         }
