@@ -1,6 +1,6 @@
 ﻿namespace ZooArchitect.View
 {
-    internal class ViewComponent : Component
+    public class ViewComponent : Component
     {
         public override void Copy(Component component)
         {

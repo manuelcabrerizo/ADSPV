@@ -6,12 +6,13 @@ using Rexar.Toolbox.Services;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using ZooArchitect.Architecture.Controllers.Events;
 using ZooArchitect.Architecture.Data;
 using ZooArchitect.Architecture.GameLogic.Math;
 
 namespace ZooArchitect.Architecture.GameLogic.Entities.Systems
 {
-    public sealed class EntityFactory : IService
+    public sealed class EntityFactory : IService, IDisposable
     {
         private EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
         private EntityRegistry EntityRegistry => ServiceProvider.Instance.GetService<EntityRegistry>();
@@ -33,6 +34,18 @@ namespace ZooArchitect.Architecture.GameLogic.Entities.Systems
             raiseEntityCreatedMethod = GetType().GetMethod(nameof(RaiseEntityCreatedMethod), BindingFlags.NonPublic | BindingFlags.Instance);
 
             RegisterEntityMethods();
+
+            EventBus.Subscribe<SpawnEntityRequestAceptedEvent>(SpawnEntity);
+        }
+
+        public void Dispose()
+        {
+            EventBus.Unsubscribe<SpawnEntityRequestAceptedEvent>(SpawnEntity);
+        }
+
+        private void SpawnEntity(in SpawnEntityRequestAceptedEvent spawnEntityRequestAceptedEvent)
+        {
+            CreateInstance<Animal>(spawnEntityRequestAceptedEvent.blueprintToSpawn, spawnEntityRequestAceptedEvent.coordinateToSpawn);
         }
 
         public void CreateInstance<EntityType>(string blueprintId, Coordinate coordinate) where EntityType : Entity
@@ -106,6 +119,5 @@ namespace ZooArchitect.Architecture.GameLogic.Entities.Systems
                 }
             }
         }
-
     }
 }

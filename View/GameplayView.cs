@@ -1,5 +1,6 @@
 ﻿using Rexar.Toolbox.Services;
 using ZooArchitect.Architecture;
+using ZooArchitect.Vew.Controller;
 using ZooArchitect.View.GameLogic.Entities.Systems;
 using ZooArchitect.View.Logs;
 using ZooArchitect.View.Resources;
@@ -13,8 +14,8 @@ namespace ZooArchitect.View
 
         private Gameplay gameplay;
         private ConsoleView consoleView;
-
         private EntityFactoryView entityFactoryView;
+        private SpawnEntityControllerView spawnEntityControllerView;
 
         public override void Init()
         {
@@ -32,11 +33,14 @@ namespace ZooArchitect.View
         {
             gameplay.Init();
             gameplay.LateInit();
+            spawnEntityControllerView = new SpawnEntityControllerView();
+
         }
 
         public override void Tick(float deltaTime)
         {
             gameplay.Tick(deltaTime);
+            spawnEntityControllerView.Tick(deltaTime);
         }
 
         public override void Copy(Component component)
@@ -47,7 +51,9 @@ namespace ZooArchitect.View
         /*
         protected override void OnUnload()
         {
+            gameplay.Dispose();
             consoleView.Dispose();
+            spawnEntityControllerView.Dispose();
             Graphics.Dispose();
         }
         */

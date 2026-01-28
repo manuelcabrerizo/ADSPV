@@ -9,7 +9,7 @@ namespace ZooArchitect.View
         { 
             this.owner = owner;
         }
-        public abstract void Copy(Component component);
+        public virtual void Copy(Component component) { }
         public virtual void Init() { }
         public virtual void LateInit() { }
         public virtual void Tick(float deltaTime) { }
