@@ -101,13 +101,11 @@ namespace View.Engine.Rendering
             GL.Uniform1(location, val);
         }
 
-        // TODO: check how ref works on C#
         public void SetMatrix4(string name, ref Matrix4 mat)
         {
             int location = GL.GetUniformLocation(handle, name);
             GL.UniformMatrix4(location, true, ref mat);
         }
-
 
         protected virtual void Dispose(bool disposing)
         {
@@ -121,7 +119,6 @@ namespace View.Engine.Rendering
         public void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);
         }
         
         private List<string> GetUniformBufferNames()
