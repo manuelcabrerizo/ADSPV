@@ -1,28 +1,23 @@
-﻿using Rexar.Toolbox.Blueprint;
+﻿using OpenTK.Windowing.GraphicsLibraryFramework;
+using Rexar.Toolbox.Blueprint;
 using Rexar.Toolbox.DataFlow;
 using Rexar.Toolbox.Events;
 using Rexar.Toolbox.Services;
+using Rexar.View.Engine.Input;
 using System;
 using System.Collections.Generic;
 using ZooArchitect.Architecture.Controllers.Events;
 using ZooArchitect.Architecture.Data;
 using ZooArchitect.Architecture.GameLogic.Math;
+using ZooArchitect.Architecture.Logs;
 
 namespace ZooArchitect.Vew.Controller
 {
-    public enum KeyCode
-    {
-        Alpha1, Alpha2, Alpha3, Alpha4
-    }
-
     public sealed class SpawnEntityControllerView : ITickable, IDisposable
     {
-        int spawned = 0;
-
-
-        private List<KeyCode> keys = new List<KeyCode>()
+        private List<Keys> keys = new List<Keys>()
         {
-            KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4
+            Keys.D1, Keys.D2, Keys.D3, Keys.D4
         };
 
         private EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
@@ -42,25 +37,18 @@ namespace ZooArchitect.Vew.Controller
 
         private void OnSpawnRejected(in SpawnEntityRequestRejectedEvent spawnEntityRequestRejectedEvent)
         {
-            Console.Write($"Spawn of {spawnEntityRequestRejectedEvent.blueprintToSpawn} in {spawnEntityRequestRejectedEvent.coordinateToSpawn} rejected\n");
+            GameConsole.Warning($"Spawn of {spawnEntityRequestRejectedEvent.blueprintToSpawn} in {spawnEntityRequestRejectedEvent.coordinateToSpawn} rejected\n");
         }
 
         public void Tick(float deltaTime)
         {
-            if (spawned < animalsBlueprints.Count)
+            for (int i = 0; i < animalsBlueprints.Count; i++)
             {
-                for (int i = 0; i < animalsBlueprints.Count; i++)
+                if (Input.GetKeyDown(keys[i]))
                 {
-                    EventBus.Raise<SpawnEntityRequestEvent>(animalsBlueprints[i], new Coordinate(new Point(i * 100, 1)));
-                    spawned++;
-                    //if (Input.GetKeyDown(keys[i]))
-                    //{
-                    // Request
-                    //}
+                    EventBus.Raise<SpawnEntityRequestEvent>(animalsBlueprints[i], new Coordinate(new Point(i * 20, i * 20)));
                 }
             }
-
-
         }
     }
 }

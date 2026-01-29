@@ -3,6 +3,7 @@ using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using Rexar.Toolbox.Services;
+using Rexar.View.Engine.Input;
 using View.Engine.Rendering;
 
 namespace ZooArchitect.View
@@ -24,6 +25,7 @@ namespace ZooArchitect.View
         {
             base.OnLoad();
 
+            Input.Init();
             Engine.Init();
             Engine.LateInit();
 
@@ -36,6 +38,7 @@ namespace ZooArchitect.View
             base.OnUnload();
 
             Graphics.Dispose();
+            Engine.Dispose();
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)
@@ -53,6 +56,7 @@ namespace ZooArchitect.View
 
             float deltaTime = (float)e.Time;
             Engine.Tick(deltaTime);
+            Input.Tick();
 
             Graphics.DrawEnd();
 
@@ -71,6 +75,18 @@ namespace ZooArchitect.View
         {
             GameObject view = Engine.Instantiate(null, Vector3.Zero);
             view.AddComponent<GameplayView>(new GameplayView());
+        }
+
+        protected override void OnKeyDown(KeyboardKeyEventArgs e)
+        {
+            Input.SetKey(e.Key, true);
+            base.OnKeyDown(e);
+        }
+
+        protected override void OnKeyUp(KeyboardKeyEventArgs e)
+        {
+            Input.SetKey(e.Key, false);
+            base.OnKeyUp(e);
         }
     }
 }

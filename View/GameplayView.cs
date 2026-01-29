@@ -13,7 +13,7 @@ namespace ZooArchitect.View
         private string BlueprintsPath => "../Assets/StreamingAssets/Blueprints.xlsx";
 
         private Gameplay gameplay;
-        private ConsoleView consoleView;
+        private GameConsoleView consoleView;
         private EntityFactoryView entityFactoryView;
         private SpawnEntityControllerView spawnEntityControllerView;
 
@@ -26,7 +26,7 @@ namespace ZooArchitect.View
             ServiceProvider.Instance.AddService<EntityRegistryView>(new EntityRegistryView());
             entityFactoryView = new EntityFactoryView();
 
-            consoleView = new ConsoleView();
+            consoleView = new GameConsoleView();
         }
 
         public override void LateInit()
@@ -47,15 +47,12 @@ namespace ZooArchitect.View
         {
         }
 
-        // TODO: ...
-        /*
-        protected override void OnUnload()
+
+        public override void OnDisable()
         {
             gameplay.Dispose();
             consoleView.Dispose();
             spawnEntityControllerView.Dispose();
-            Graphics.Dispose();
         }
-        */
     }
 }

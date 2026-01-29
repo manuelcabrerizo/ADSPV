@@ -19,6 +19,10 @@ namespace ZooArchitect.View
             this.rotation = rotation;
         }
 
+        public override void OnDisable()
+        {
+        }
+
         public override void Copy(Component component)
         {
             Transform transform = component as Transform;

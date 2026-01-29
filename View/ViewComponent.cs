@@ -14,6 +14,10 @@
         {
         }
 
+        public override void OnDisable()
+        { 
+        }
+
         public override void Tick(float deltaTime)
         {
         }

@@ -23,6 +23,15 @@ namespace View.Engine.Rendering
         private int used;
         private Shader shader;
 
+        static BatchVertex[] sQuad = new BatchVertex[6]
+        {
+                new BatchVertex { Pos = new Vector3(-0.5f,  0.5f, 0f), Col = new Vector3(1, 1, 1), Uvs = new Vector2(0, 1), Tex = 0f },
+                new BatchVertex { Pos = new Vector3( 0.5f,  0.5f, 0f), Col = new Vector3(1, 1, 1), Uvs = new Vector2(1, 1), Tex = 0f },
+                new BatchVertex { Pos = new Vector3( 0.5f, -0.5f, 0f), Col = new Vector3(1, 1, 1), Uvs = new Vector2(1, 0), Tex = 0f },
+                new BatchVertex { Pos = new Vector3( 0.5f, -0.5f, 0f), Col = new Vector3(1, 1, 1), Uvs = new Vector2(1, 0), Tex = 0f },
+                new BatchVertex { Pos = new Vector3(-0.5f, -0.5f, 0f), Col = new Vector3(1, 1, 1), Uvs = new Vector2(0, 0), Tex = 0f },
+                new BatchVertex { Pos = new Vector3(-0.5f,  0.5f, 0f), Col = new Vector3(1, 1, 1), Uvs = new Vector2(0, 1), Tex = 0f }
+        };
 
         public SpriteBatch(int batchSize) 
         {
@@ -51,29 +60,21 @@ namespace View.Engine.Rendering
 
         public void Draw(Vector3 position, Vector3 size, Vector3 color)
         {
-            // TODO: remove this quad from here
-            BatchVertex[] quad = new BatchVertex[6]
-            {
-                new BatchVertex { Pos = new Vector3(-0.5f,  0.5f, 0f), Col = new Vector3(1, 1, 1), Uvs = new Vector2(0, 1), Tex = 0f },
-                new BatchVertex { Pos = new Vector3( 0.5f,  0.5f, 0f), Col = new Vector3(1, 1, 1), Uvs = new Vector2(1, 1), Tex = 0f },
-                new BatchVertex { Pos = new Vector3( 0.5f, -0.5f, 0f), Col = new Vector3(1, 1, 1), Uvs = new Vector2(1, 0), Tex = 0f },
-                new BatchVertex { Pos = new Vector3( 0.5f, -0.5f, 0f), Col = new Vector3(1, 1, 1), Uvs = new Vector2(1, 0), Tex = 0f },
-                new BatchVertex { Pos = new Vector3(-0.5f, -0.5f, 0f), Col = new Vector3(1, 1, 1), Uvs = new Vector2(0, 0), Tex = 0f },
-                new BatchVertex { Pos = new Vector3(-0.5f,  0.5f, 0f), Col = new Vector3(1, 1, 1), Uvs = new Vector2(0, 1), Tex = 0f }
-            };
-
-
             if (used + 1 >= batchSize)
             {
                 Render();
             }
+
             GL.BindVertexArray(vao);
+
+            BatchVertex[] quad = (BatchVertex[])sQuad.Clone();
             for (int i = 0; i < quad.Length; i++)
             {
                 Matrix4 world = Matrix4.CreateScale(size) * Matrix4.CreateTranslation(position);
                 quad[i].Pos = new Vector3(world.Transposed() * new Vector4(quad[i].Pos, 1.0f));
                 quad[i].Col = color;
             }
+
             GL.BufferSubData(BufferTarget.ArrayBuffer, used * vertexSize * quad.Length, vertexSize * quad.Length, quad);
             GL.BindVertexArray(0);
             used++;

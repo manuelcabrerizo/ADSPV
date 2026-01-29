@@ -32,6 +32,10 @@ namespace ZooArchitect.View
             Graphics.DrawSprite(transform.position, transform.size, color);
         }
 
+        public override void OnDisable()
+        {
+        }
+
         public override void Copy(Component component)
         {
             Sprite sprite = component as Sprite;

@@ -5,11 +5,11 @@ using ZooArchitect.Architecture.Logs.Events;
 
 namespace ZooArchitect.View.Logs
 {
-    public sealed class ConsoleView : IDisposable
+    public sealed class GameConsoleView : IDisposable
     {
         private static EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
 
-        public ConsoleView() 
+        public GameConsoleView() 
         {
             EventBus.Subscribe<ConsoleLogEvent>(LogMessage);
             EventBus.Subscribe<ConsoleWarningEvent>(LogWarning);

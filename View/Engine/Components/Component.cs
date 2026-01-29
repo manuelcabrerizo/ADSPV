@@ -13,6 +13,8 @@ namespace ZooArchitect.View
         public virtual void Init() { }
         public virtual void LateInit() { }
         public virtual void Tick(float deltaTime) { }
+        public abstract void OnDisable();
+
         public ComponentType GetComponent<ComponentType>() where ComponentType : Component
         { 
             return owner.GetComponent<ComponentType>();

@@ -8,7 +8,7 @@ using System.Xml;
 
 namespace ZooArchitect.View
 {
-    public sealed class Engine : IInitable, ITickable, IService
+    public sealed class Engine : IInitable, ITickable, IService, IDisposable
     {
         public bool IsPersistance => true;
 
@@ -23,6 +23,15 @@ namespace ZooArchitect.View
             gameObjectsToInit = new List<GameObject>();
             gameObjectsToLateInit = new List<GameObject>();
             gameObjectsToRemove = new List<GameObject>();
+        }
+
+        public void Dispose()
+        {
+            foreach (GameObject gameObject in gameObjects)
+            {
+                gameObject.Dispose();
+            }
+            gameObjects.Clear();
         }
 
         public void Init()
@@ -71,6 +80,7 @@ namespace ZooArchitect.View
         {
             foreach (GameObject go in gameObjectsToRemove)
             {
+                go.Dispose();
                 gameObjects.Remove(go);
             }
             gameObjectsToRemove.Clear();
@@ -148,6 +158,5 @@ namespace ZooArchitect.View
         {
             gameObjectsToRemove.Add(gameObject);
         }
-
     }
 }

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace ZooArchitect.View
 {
-    public class GameObject : IInitable, ITickable
+    public class GameObject : IInitable, ITickable, IDisposable
     {
         private Dictionary<Type, Component> components;
         public Dictionary<Type, Component>.ValueCollection Components => components.Values;
@@ -13,6 +13,15 @@ namespace ZooArchitect.View
         {
             components = new Dictionary<Type, Component>();
         }
+
+        public void Dispose()
+        {
+            foreach (Component component in components.Values)
+            {
+                component.OnDisable();
+            }
+        }
+
         public void Init()
         {
             foreach (Component component in components.Values)
