@@ -27,7 +27,9 @@ namespace View.Engine.Rendering
             spriteBatch = new SpriteBatch(1024);
 
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-            GL.Enable(EnableCap.DepthTest);
+
+            // TODO: temp solution
+            GL.Disable(EnableCap.DepthTest);
         }
 
         public void Dispose()

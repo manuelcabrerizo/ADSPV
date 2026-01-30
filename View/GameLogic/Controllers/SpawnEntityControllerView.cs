@@ -35,11 +35,6 @@ namespace ZooArchitect.Vew.Controller
             EventBus.Unsubscribe<SpawnEntityRequestRejectedEvent>(OnSpawnRejected);
         }
 
-        private void OnSpawnRejected(in SpawnEntityRequestRejectedEvent spawnEntityRequestRejectedEvent)
-        {
-            GameConsole.Warning($"Spawn of {spawnEntityRequestRejectedEvent.blueprintToSpawn} in {spawnEntityRequestRejectedEvent.coordinateToSpawn} rejected\n");
-        }
-
         public void Tick(float deltaTime)
         {
             for (int i = 0; i < animalsBlueprints.Count; i++)
@@ -49,6 +44,11 @@ namespace ZooArchitect.Vew.Controller
                     EventBus.Raise<SpawnEntityRequestEvent>(animalsBlueprints[i], new Coordinate(new Point(i * 20, i * 20)));
                 }
             }
+        }
+
+        private void OnSpawnRejected(in SpawnEntityRequestRejectedEvent spawnEntityRequestRejectedEvent)
+        {
+            GameConsole.Warning($"Spawn of {spawnEntityRequestRejectedEvent.blueprintToSpawn} in {spawnEntityRequestRejectedEvent.coordinateToSpawn} rejected\n");
         }
     }
 }

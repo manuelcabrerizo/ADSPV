@@ -11,29 +11,16 @@ namespace ZooArchitect.View
 
         public Vector3 color;
 
-        private Transform transform;
-
-        public Sprite()
+        public override void Update(float deltaTime)
         {
-        }
-
-        public Sprite(GameObject owner, Vector3 color)
-        {
-            this.color = color;
-        }
-
-        public override void Init()
-        {
-            transform = GetComponent<Transform>();
-        }
-
-        public override void Tick(float deltaTime)
-        {
-            Graphics.DrawSprite(transform.position, transform.size, color);
-        }
-
-        public override void OnDisable()
-        {
+            Vector3 position = transform.position;
+            Transform parent = transform.parent;
+            while (parent != null)
+            {
+                position += parent.position;
+                parent = parent.parent;
+            }
+            Graphics.DrawSprite(position, transform.size, color);
         }
 
         public override void Copy(Component component)

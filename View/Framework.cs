@@ -10,12 +10,17 @@ namespace ZooArchitect.View
 {
     public sealed class Framework : GameWindow
     {
+        private int windowWidth;
+        private int windowHeight;
+
         private Engine Engine => ServiceProvider.Instance.GetService<Engine>();
         private Graphics Graphics => ServiceProvider.Instance.GetService<Graphics>();
 
         public Framework(int width, int height, string title)
             : base(GameWindowSettings.Default, new NativeWindowSettings() { ClientSize = (width, height), Title = title })
         {
+            this.windowWidth  = width;
+            this.windowHeight = height;
             ServiceProvider.Instance.AddService<Engine>(new Engine());
             ServiceProvider.Instance.AddService<Graphics>(new Graphics());
             CreateDefaultGameObjects();
@@ -26,10 +31,10 @@ namespace ZooArchitect.View
             base.OnLoad();
 
             Input.Init();
-            Engine.Init();
-            Engine.LateInit();
+            Engine.Awake();
+            Engine.Start();
 
-            Graphics.SetProj(Matrix4.CreateOrthographic(800.0f, 600.0f, 0.0f, 100.0f).Transposed());
+            Graphics.SetProj(Matrix4.CreateOrthographic(windowWidth, windowHeight, 0.0f, 100.0f).Transposed());
             Graphics.SetView(Matrix4.CreateTranslation(0.0f, 0.0f, 0.0f).Transposed());
         }
 
@@ -55,7 +60,7 @@ namespace ZooArchitect.View
             Graphics.DrawBegin();
 
             float deltaTime = (float)e.Time;
-            Engine.Tick(deltaTime);
+            Engine.Update(deltaTime);
             Input.Tick();
 
             Graphics.DrawEnd();
@@ -74,7 +79,7 @@ namespace ZooArchitect.View
         private void CreateDefaultGameObjects()
         {
             GameObject view = Engine.Instantiate(null, Vector3.Zero);
-            view.AddComponent<GameplayView>(new GameplayView());
+            view.AddComponent<GameplayView>();
         }
 
         protected override void OnKeyDown(KeyboardKeyEventArgs e)

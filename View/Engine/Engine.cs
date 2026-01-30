@@ -1,5 +1,4 @@
 ﻿using OpenTK.Mathematics;
-using Rexar.Toolbox.DataFlow;
 using Rexar.Toolbox.Services;
 using System;
 using System.Collections.Generic;
@@ -8,7 +7,7 @@ using System.Xml;
 
 namespace ZooArchitect.View
 {
-    public sealed class Engine : IInitable, ITickable, IService, IDisposable
+    public sealed class Engine : IService, IDisposable
     {
         public bool IsPersistance => true;
 
@@ -34,43 +33,43 @@ namespace ZooArchitect.View
             gameObjects.Clear();
         }
 
-        public void Init()
+        public void Awake()
         {
-            InitNewGameObjects();
+            AwakeNewGameObjects();
         }
 
-        public void LateInit()
+        public void Start()
         {
-            LateInitNewGameObjects();
+            StartNewGameObjects();
         }
 
-        public void Tick(float deltaTime)
+        public void Update(float deltaTime)
         {
             RemoveDeletedGameObjects();
-            InitNewGameObjects();
-            LateInitNewGameObjects();
+            AwakeNewGameObjects();
+            StartNewGameObjects();
 
             foreach (GameObject gameObject in gameObjects)
             {
-                gameObject.Tick(deltaTime);
+                gameObject.Update(deltaTime);
             }
         }
 
-        private void InitNewGameObjects()
+        private void AwakeNewGameObjects()
         {
             for (int i = gameObjectsToInit.Count - 1; i >= 0; i--)
             { 
-                gameObjectsToInit[i].Init();
+                gameObjectsToInit[i].Awake();
                 gameObjectsToLateInit.Add(gameObjectsToInit[i]);
                 gameObjectsToInit.RemoveAt(i);
             }
         }
 
-        private void LateInitNewGameObjects()
+        private void StartNewGameObjects()
         {
             for (int i = gameObjectsToLateInit.Count - 1; i >= 0; i--)
             {
-                gameObjectsToLateInit[i].LateInit();
+                gameObjectsToLateInit[i].Start();
                 gameObjects.Add(gameObjectsToLateInit[i]);
                 gameObjectsToLateInit.RemoveAt(i);
             }
@@ -106,7 +105,10 @@ namespace ZooArchitect.View
             else
             {
                 GameObject gameObject = new GameObject();
-                gameObject.AddComponent<Transform>(new Transform(gameObject, position, Vector3.One, 0.0f));
+                Transform transform = gameObject.AddComponent<Transform>();
+                transform.position = position;
+                transform.size = Vector3.One;
+                transform.rotation = 0.0f;
                 gameObjectsToInit.Add(gameObject);
                 return gameObject;
             }
@@ -120,9 +122,11 @@ namespace ZooArchitect.View
                 GameObject gameObject = new GameObject();
                 XmlDocument doc = new XmlDocument();
                 doc.Load(prefabPath);
-                for (int i = 0; i < doc.DocumentElement.ChildNodes.Count; i++)
+                XmlElement root = doc.DocumentElement;
+                gameObject.name = root.Attributes["tag"].Value;
+                for (int i = 0; i < root.ChildNodes.Count; i++)
                 {
-                    var node = doc.DocumentElement.ChildNodes[i];
+                    var node = root.ChildNodes[i];
                     if (string.Equals(node.Name, "Transform"))
                     {
                         var childs = node.ChildNodes;
@@ -135,7 +139,10 @@ namespace ZooArchitect.View
                         size.Y = float.Parse(childs[1].Attributes["y"].Value);
                         size.Z = float.Parse(childs[1].Attributes["z"].Value);
                         float rotation = float.Parse(childs[2].Attributes["r"].Value);
-                        gameObject.AddComponent<Transform>(new Transform(gameObject, position, size, rotation));
+                        Transform transform = gameObject.AddComponent<Transform>();
+                        transform.position = position;
+                        transform.size = size;
+                        transform.rotation = rotation;
                     }
                     else if (string.Equals(node.Name, "Sprite"))
                     {
@@ -144,7 +151,8 @@ namespace ZooArchitect.View
                         color.X = float.Parse(childs[0].Attributes["x"].Value);
                         color.Y = float.Parse(childs[0].Attributes["y"].Value);
                         color.Z = float.Parse(childs[0].Attributes["z"].Value);
-                        gameObject.AddComponent<Sprite>(new Sprite(gameObject, color));
+                        Sprite sprite = gameObject.AddComponent<Sprite>();
+                        sprite.color = color;
                     }
                 }
                 return gameObject;

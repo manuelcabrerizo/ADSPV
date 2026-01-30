@@ -1,25 +1,13 @@
-﻿namespace ZooArchitect.View
+﻿using Rexar.Toolbox.DataFlow;
+using System;
+
+namespace ZooArchitect.View
 {
-    public class ViewComponent : Component
+    public abstract class ViewComponent : Component, IInitable, ITickable, IDisposable
     {
-        public override void Copy(Component component)
-        {
-        }
-
-        public override void Init()
-        {
-        }
-
-        public override void LateInit()
-        {
-        }
-
-        public override void OnDisable()
-        { 
-        }
-
-        public override void Tick(float deltaTime)
-        {
-        }
+        public virtual void Init() { }
+        public virtual void LateInit() { }
+        public virtual void Tick(float deltaTime) { }
+        public virtual void Dispose() { }
     }
 }

@@ -1,14 +1,17 @@
 ﻿using Rexar.Toolbox.Blueprint;
+using Rexar.Toolbox.Events;
 using Rexar.Toolbox.Services;
 using System;
 using System.Collections.Generic;
 using ZooArchitect.Architecture.Data;
 using ZooArchitect.Architecture.Exceptions;
+using ZooArchitect.Architecture.GameLogic.Events;
 
 namespace ZooArchitect.Architecture.GameLogic
 {
     public sealed class Map
     {
+        private EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
         private BlueprintRegistry BlueprintRegistry => ServiceProvider.Instance.GetService<BlueprintRegistry>();
         private BlueprintBinder BlueprintBinder => ServiceProvider.Instance.GetService<BlueprintBinder>();
 
@@ -59,7 +62,7 @@ namespace ZooArchitect.Architecture.GameLogic
 
             if (defaultDataHash == 0)
             {
-                throw new BrokenGameRoleException("Missing default tile definition in Blueprint.xlsx");
+                throw new BrokenGameRuleException("Missing default tile definition in Blueprint.xlsx");
             }
 
             for (int x = 0; x < sizeX; x++)
@@ -67,9 +70,11 @@ namespace ZooArchitect.Architecture.GameLogic
                 for (int y = 0; y < sizeY; y++)
                 {
                     grid[x, y] = new Tile(defaultDataHash);
+                    EventBus.Raise<TileCreatedEvent>(defaultDataHash, x, y);
                 }
             }
 
+            EventBus.Raise<MapCreatedEvent>();
         }
     }
 }

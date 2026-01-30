@@ -7,6 +7,5 @@ namespace ZooArchitect.View.GameLogic.Entities.Instances
     internal sealed class AnimalView : LivingEntityView 
     {
         public override Type ArchitectureEntityType => typeof(Animal);
-
     }
 }

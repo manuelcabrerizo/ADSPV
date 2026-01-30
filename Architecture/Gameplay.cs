@@ -4,9 +4,7 @@ using Rexar.Toolbox.Events;
 using Rexar.Toolbox.Scheduling;
 using Rexar.Toolbox.Services;
 using System;
-using ZooArchitect.Architecture.Controllers;
 using ZooArchitect.Architecture.GameLogic;
-using ZooArchitect.Architecture.GameLogic.Entities.Systems;
 
 namespace ZooArchitect.Architecture
 {
@@ -15,7 +13,7 @@ namespace ZooArchitect.Architecture
         private TaskScheduler TaskScheduler => ServiceProvider.Instance.GetService<TaskScheduler>();
         private Time Time => ServiceProvider.Instance.GetService<Time>();
 
-        private SpawnEntityControllerArchitecture spawnEntityControllerArchitecture;
+        private Scene scene;
 
         public Gameplay(string blueprintPath)
         {
@@ -23,32 +21,29 @@ namespace ZooArchitect.Architecture
             ServiceProvider.Instance.AddService<BlueprintRegistry>(new BlueprintRegistry(blueprintPath));
             ServiceProvider.Instance.AddService<BlueprintBinder>(new BlueprintBinder());
             ServiceProvider.Instance.AddService<TaskScheduler>(new TaskScheduler());
-            spawnEntityControllerArchitecture = new SpawnEntityControllerArchitecture();
+            scene = new Scene();
         }
 
         public void Init()
         {
-            ServiceProvider.Instance.AddService<Time>(new Time());
-            ServiceProvider.Instance.AddService<DayNightCycle>(new DayNightCycle());
-            ServiceProvider.Instance.AddService<Wallet>(new Wallet());
-            ServiceProvider.Instance.AddService<EntityRegistry>(new EntityRegistry());
-            ServiceProvider.Instance.AddService<EntityFactory>(new EntityFactory());
+            scene.Init();
         }
 
         public void LateInit()
         {
-            new Map(10, 10);
+            scene.LateInit();
         }
 
         public void Tick(float deltaTime)
         {
             Time.Tick(deltaTime);
             TaskScheduler.Tick(Time.LogicDeltaTime);
+            scene.Tick(deltaTime);
         }
 
         public void Dispose()
         {
-            spawnEntityControllerArchitecture.Dispose();
+            scene.Dispose();
         }
     }
 }

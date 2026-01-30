@@ -1,13 +1,15 @@
-﻿using Rexar.Toolbox.DataFlow;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using View.Exceptions;
 
 namespace ZooArchitect.View
 {
-    public class GameObject : IInitable, ITickable, IDisposable
+    public class GameObject : IDisposable
     {
         private Dictionary<Type, Component> components;
         public Dictionary<Type, Component>.ValueCollection Components => components.Values;
+        public Transform transform { get; set; }
+        public string name { get; set; }
 
         public GameObject() 
         {
@@ -22,27 +24,27 @@ namespace ZooArchitect.View
             }
         }
 
-        public void Init()
+        public void Awake()
         {
             foreach (Component component in components.Values)
             {
-                component.Init();
+                component.Awake();
             }
         }
 
-        public void LateInit()
+        public void Start()
         {
             foreach (Component component in components.Values)
             {
-                component.LateInit();
+                component.Start();
             }
         }
 
-        public void Tick(float deltaTime)
+        public void Update(float deltaTime)
         {
             foreach (Component component in components.Values)
             {
-                component.Tick(deltaTime);
+                component.Update(deltaTime);
             }
         }
 
@@ -53,22 +55,18 @@ namespace ZooArchitect.View
                 Component component = Activator.CreateInstance(componentType) as Component;
                 components.Add(componentType, component);
                 component.SetOwner(this);
+
+                Transform transformComponent = GetComponent<Transform>();
+                transform = transformComponent;
+                component.transform = transformComponent;
                 return component;
             }
-            throw new InvalidOperationException(); // TODO: custom exception
+            throw new ParameterlessConstructorNotFoundException("Parameterless Constructor Not Found in: " + componentType.Name);
         }
 
-        public void AddComponent<ComponentType>(ComponentType component) where ComponentType : Component
+        public ComponentType AddComponent<ComponentType>() where ComponentType : Component
         {
-            if (!components.ContainsKey(typeof(ComponentType)))
-            {
-                component.SetOwner(this);
-                components.Add(typeof(ComponentType), component);
-            }
-            else
-            {
-                throw new InvalidOperationException(); // TODO: custom exception
-            }
+            return AddComponent(typeof(ComponentType)) as ComponentType;
         }
 
         public void RemoveComponent<ComponentType>() where ComponentType : Component

@@ -1,23 +1,22 @@
-﻿using Rexar.Toolbox.DataFlow;
-
-namespace ZooArchitect.View
+﻿namespace ZooArchitect.View
 {
-    public abstract class Component : IInitable, ITickable
+    public abstract class Component
     {
-        protected GameObject owner;
-        public void SetOwner(GameObject owner)
+        public GameObject gameObject;
+        public Transform transform { get; set; }
+        public void SetOwner(GameObject gameObject)
         { 
-            this.owner = owner;
+            this.gameObject = gameObject;
         }
+        public virtual void Awake() { }
+        public virtual void Start() { }
+        public virtual void Update(float deltaTime) { }
+        public virtual void OnDisable() { }
         public virtual void Copy(Component component) { }
-        public virtual void Init() { }
-        public virtual void LateInit() { }
-        public virtual void Tick(float deltaTime) { }
-        public abstract void OnDisable();
 
         public ComponentType GetComponent<ComponentType>() where ComponentType : Component
         { 
-            return owner.GetComponent<ComponentType>();
+            return gameObject.GetComponent<ComponentType>();
         }
     }
 }

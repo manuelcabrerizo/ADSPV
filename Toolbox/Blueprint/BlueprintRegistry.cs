@@ -29,5 +29,6 @@ namespace Rexar.Toolbox.Blueprint
 
         public List<string> BlueprintsOf(string blueprintTable) => BlueprintDatas[blueprintTable].BlueprintIDs;
         public List<string> ParametersOf(string blueprintTable) => BlueprintDatas[blueprintTable].Parameters;
+        public string this[string blueprintTable, string blueprintId, string parameter] => blueprintDatas[blueprintTable][blueprintId, parameter];
     }
 }

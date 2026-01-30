@@ -6,6 +6,7 @@ using System;
 using System.Reflection;
 using ZooArchitect.Architecture.GameLogic.Entities;
 using ZooArchitect.Architecture.GameLogic.Entities.Systems;
+using ZooArchitect.View.Data;
 using ZooArchitect.View.GameLogic.Entities.Instances;
 using ZooArchitect.View.Resources;
 
@@ -14,11 +15,12 @@ namespace ZooArchitect.View.GameLogic.Entities.Systems
     [ViewOf(typeof(EntityFactory))]
     internal sealed class EntityFactoryView : IDisposable
     {
-        private Engine Engine => ServiceProvider.Instance.GetService<Engine>();
         private EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
         private PrefabsRegistryView PrefabsRegistryView => ServiceProvider.Instance.GetService<PrefabsRegistryView>();
         private EntityRegistryView EntityRegistryView => ServiceProvider.Instance.GetService<EntityRegistryView>();
         private EntityRegistry EntityRegistry => ServiceProvider.Instance.GetService<EntityRegistry>();
+        private GameScene GameScene => ServiceProvider.Instance.GetService<GameScene>();
+
 
         private MethodInfo registerEntityMethod;
         private MethodInfo setEntityIdMethod;
@@ -33,16 +35,17 @@ namespace ZooArchitect.View.GameLogic.Entities.Systems
                 BindingFlags.NonPublic | BindingFlags.Instance);
         }
 
-        private void OnEntityCreated(in EntityCreatedEvent<Entity> callback)
+        private void OnEntityCreated(in EntityCreatedEvent<Entity> entityCreatedEvent)
         {
-            GameObject instance = Engine.Instantiate(PrefabsRegistryView.Get(callback.blueprintId),
-                new Vector3((float)callback.coordinate.Origin.X, (float)callback.coordinate.Origin.Y, 0.0f));
+            ViewComponent viewComponent = GameScene.AddSceneComponent(
+                ViewArchitectureMap.ViewOf(EntityRegistry[entityCreatedEvent.entityCreatedId].GetType()),
+                PrefabsRegistryView.Get(TableNamesView.ANIMALS_VIEW_TABLE_NAME, entityCreatedEvent.blueprintId).name += $"  -  Architecture type: {EntityRegistry[entityCreatedEvent.entityCreatedId].GetType().Name} - ID: {entityCreatedEvent.entityCreatedId}",
+                GameScene.EntitiesContainer.transform,
+                PrefabsRegistryView.Get(TableNamesView.ANIMALS_VIEW_TABLE_NAME, entityCreatedEvent.blueprintId));
 
-            Component viewComponent = instance.AddComponent(ViewArchitectureMap.ViewOf(EntityRegistry[callback.entityCreatedId].GetType()));
+            viewComponent.transform.position = new Vector3((float)entityCreatedEvent.coordinate.Origin.X, (float)entityCreatedEvent.coordinate.Origin.Y, 0.0f);
 
-            // TODO: viewComponent.gameObject.name += ...
-
-            setEntityIdMethod.Invoke(viewComponent, new object[] { callback.entityCreatedId });
+            setEntityIdMethod.Invoke(viewComponent, new object[] { entityCreatedEvent.entityCreatedId });
             registerEntityMethod.Invoke(EntityRegistryView, new object[] { viewComponent });
         }
 

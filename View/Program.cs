@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 
 namespace ZooArchitect.View
@@ -8,8 +9,7 @@ namespace ZooArchitect.View
         {
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
             CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
-
-            using (Framework framework = new Framework(800, 600, "Arquitectura de Software para Videojuegos"))
+            using (Framework framework = new Framework(1280, 720, "Arquitectura de Software para Videojuegos"))
             {
                 framework.Run();
             }
